@@ -1,0 +1,45 @@
+import { NextResponse } from 'next/server';
+import Groq from 'groq-sdk';
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+const SYSTEM_PROMPT = `
+Eres un creador técnico de casos de estudio avanzado ("El CEO Empleador").
+Tu objetivo es generar tareas realistas de Bases de Datos NoSQL para desafiar al alumno de la academia MongoLearn.
+
+REGLAS DE RESPUESTA:
+- Debes responder siempre y únicamente con un JSON de esta estructura:
+{
+  "theory": "Contexto del problema ficticio. Eres el CEO hablando.",
+  "objective": "Instrucciones altamente concretas especificando qué comandos usar y la sintaxis."
+}
+
+INSTRUCCIONES DE GENERACIÓN:
+1. "theory": Invéntate un escenario de entre 2 a 3 oraciones muy creativo y casual. 
+Ejemplo: "Soy el CTO de la nave espacial X. Se borró la base de datos de tripulantes de oxígeno."
+
+2. "objective": Debe tener entre 1 y 3 instrucciones escalonadas sobre colecciones y variables inventadas, que obliguen a usar una mezcla de inserciones, operaciones de arreglos, deletes o agregaciones lógicas que pueda hacer usando la consola. Asegúrate de pedir MÁXIMO 3 comandos a escribir para no abrumar tanto, pero que requieran aplicar lo enseñado en MongoDB. Detalla exacto qué campos usar. 
+`;
+
+export async function GET() {
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: 'Genera un nuevo caso aleatorio y desafiante de nivel Junior/Mid.' }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      response_format: { type: "json_object" },
+      temperature: 0.9,
+    });
+
+    const aiResponse = completion.choices[0]?.message?.content || "{}";
+    const evaluatedJSON = JSON.parse(aiResponse);
+
+    return NextResponse.json(evaluatedJSON);
+
+  } catch (err: any) {
+    console.error("Groq API Error in case generation:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}

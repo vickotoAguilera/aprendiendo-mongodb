@@ -1,0 +1,1778 @@
+
+--- TIEV32_U2_S3_GLO.pdf ---
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+CRUD : Acrónimo de Create, Read, Update y Delete. Son las cuatro operaciones básicas para 
+manipular datos en bases de datos.  
+ 
+ 
+db.collection.insertOne() : Método utilizado en MongoDB para insertar un único documento en 
+una colección.  
+db.collection.insertMany() : Método utilizado en MongoDB para insertar múltiples documentos a 
+la vez en una colección.  
+db.collection.find() : Método utilizado en MongoDB para consultar documentos en una 
+colección. Puede incluir condiciones y proyecciones para filtrar y mostrar datos específicos.  
+db.collection.updateone() : Método utilizado en MongoDB para actualizar el primer documento 
+que coincida con una condición específica.  
+db.collection.updateMany(): Método utilizado en MongoDB para actualizar todos los 
+documentos que coincidan con una condición específica.  
+Base s de datos no estructuradas  
+Unidad 2 
+C 
+D Glosario   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+2 
+ db.collection.deleteOne(): Método utilizado en MongoDB para eliminar el primer documento 
+que cumpla con una condición específica.  
+db.collection.deleteMany(): Método utilizado en MongoDB para eliminar todos los 
+documentos que cumplan con una condición específica.  
+db.collection.remove(): Método antiguo utilizado en MongoDB para eliminar documentos. 
+Acepta una condición y un valor booleano para eliminar uno o más documentos.  
+ 
+ 
+Mongoimport : Herramienta nativa de MongoDB utilizada para importar datos desde archivos 
+JSON o CSV a una base de datos de MongoDB.  M 
+--- TIEV32_U2_S3_LEC.pdf ---
+ 
+ 
+ 
+ 
+ 
+ 
+Índice  
+ 
+I. Etapas del proceso de instalación de MongoDB y principales comandos de gestión  
+II. Operaciones CRUD en documentos y subdocumentos  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Bases de datos no estructuradas  
+Unidad 2: Operaciones esenciales con MongoDB  
+Descargable   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+2 
+ Introducción  
+En esta unidad, explorarás c ómo  descargar e instalar la base de datos MongoDB y, además, 
+conocerás sus principales comandos. También aprenderás cómo ejecutar  operaciones 
+CRUD  (Creación, Búsqueda, Modificación y Eliminación)  en documentos y subdocumentos, 
+además de ver el uso de arreglos con sus diferentes métodos.    
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+3 
+ Etapas del proceso de instalación de MongoDB y principales 
+comandos de gestión  
+Dirígete al sitio web de MongoDB y, luego, sigue los pasos que te muestra el siguiente video 
+instructivo: https://www.mongodb.com/try/download/community  
+ 
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+4 
+  
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+5 
+  
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+6 
+  
+ 
+ 
+ 
+También se puede usar la consola de cmd. Para ejecutar el programa de cualquier ruta, se 
+debe (2) configurar una nueva variable de entorno. Para ello, primero debes (3) descargar la 
+versión para MongoDB Shell. Hazlo desde (3) el apartado Tools, ubicado en la columna 
+izquierda de la página de descarga,  
+Recuerda que el modo consola de MongoDB Compass  se encuentra en la parte inferior de la 
+ventana y que esta se puede ampliar desde el borde superior de la misma. Por defecto, deja 
+ubicado “test” en la base de datos .  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+7 
+                        
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+8 
+  
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+9 
+  
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+10 
+  
+  
+ 
+ 
+ 
+ 
+11. Pega la ruta de 
+MongoDB   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+11 
+ Luego de pegar la ruta de MongoDB, confirma los cambios haciendo clic en Aceptar en todas 
+las ventanas activas.  
+ 
+Finalmente, digita mongo para entrar al entorno.  
+ 
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+12 
+ ¡Listo! Ya puedes comenzar a usar comandos de MongoDB  
+ 
+Comandos básicos  
+Para aprovechar al máximo las capacidades de  MongoDB,  es esencial familiarizarse con sus 
+comandos básicos. Estos comandos te permitirán realizar operaciones fundamentales como 
+crear y eliminar bases de datos, insertar, consultar, actualizar y eliminar documentos, así 
+como gestionar índices y colecciones.    
+Comandos con cmd   
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+13 
+  
+ 
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+14 
+  
+ 
+Comandos con MongoDB Compass  
+ 
+ 
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+15 
+  
+ 
+ 
+Otro comando de  MongoDB Compass  es Obtener estadísticas:  db.stats()  
+                                       
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+16 
+  
+ 
+ 
+Operaciones CRUD en documentos y subdocumentos  
+Operaciones CRUD en documentos  
+Existe un formato general para insertar documentos, pero ha sido reemplazados por los 
+métodos que se definirán a continuación.   
+Insert(): para insertar los documentos de uno en uno  
+Ejemplos :  
+ 
+//Creación de base de datos  
+> use empresa  
+//Crear nueva colección  
+> db.createCollection ("trabajador")  
+//Inserción de datos a documento de la colección con insert()  
+> db.trabajador.insert({rut:"13.444.555 -6", nombre:"Juan Perez", ciudad:"Santiago", 
+genero:"M",  edad:27, sueldo:530000})  
+Los dos métodos actuales para insertar documentos:  
+• insertOne():  para insertar los documentos de uno en uno.  
+• insertMany():  para insertar varios documentos en un mismo comando.  
+Inserción simple  
+Para insertar un documento de forma individual el método que se debe usar es insertOne(). 
+El siguiente ejemplo crea en la colección álbumes perteneciente a la base de datos  música, A medida que te familiarices con estos comandos básicos, te será más fácil 
+avanzar hacia comandos y características más avanzadas, optimizando así tus 
+capacidades y eficiencia en el manejo de datos.   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+17 
+ un documento con el álbum "Revolver" de los Beatles:  
+ 
+> use musica  
+> db.createCollection("trabajador")  
+> db.albumes.insertOne({"nombre" : "Revolver", "autor" : "The Beatles", "año" : 1966 })  
+  
+Observación:  No se ha incluido el campo _id, pero MongoDB lo añadirá automáticamente. 
+Se puede visualizar el documento con la instrucción findOne():  
+  
+> db.albumes.findOne()  
+{ 
+   "_id" : ObjectId("5f856f714f02f31ac68acf3e"),  
+   "nombre" : "Revolver",  
+   "autor" : "The Beatles",  
+  "año" : 1966   
+Inserción múltiple  
+Para añadir varios documentos de una sola vez a una colección se usa  insertMany().  
+Para inserciones múltiples esta es la forma más eficiente, ya que se envía la información de 
+una única vez. Este método recibe como argumento un array de documentos.   
+El siguiente ejemplo introduce otros tres álbumes de los Beatles con este método.  
+> db.albumes.insertMany([  
+  { 
+     "nombre" : "Abbey Road",  
+     "autor" : "The Beatles",  
+     "año" : 1969  
+  }, 
+  { 
+     "nombre" : "Let It Be",  
+     "autor" : "The Beatles",  
+     "año" : 1970  
+  },  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+18 
+   { 
+     "nombre" : "Help!",  
+     "autor" : "The Beatles",  
+    "año" : 1965  
+  } 
+]) 
+ 
+Verificando la inserción  
+> db.albumes.find()  
+{ "_id" : ObjectId ("5f85824b4f02f31ac68acf43"), "nombre" : "Revolver", "autor" : "The 
+Beatles", "año" : 1966 }  
+{ "_id" : ObjectId("5f85824e4f02f31ac68acf44"), "nombre" : "Abbey Road", "autor" : 
+"The Beatles", "año" : 1969 }  
+{ "_id" : ObjectId("5f85824e4f02f31ac68acf45"), "nombre" : "Let It Be", "autor" : "The 
+Beatles", "año" : 1970 }  
+{ "_id" : ObjectId("5f85824e4f02f31ac68acf46"), "nombre" : "Help!", "autor" : "The 
+Beatles", "año" : 1965 }  
+  
+Observación:  El inicio y fin de la inserción es con paréntesis cuadrados [ ] y la 
+separación entre los documentos es una coma (,) . 
+ 
+• Método insertMany()  
+El método insertMany() tiene un segundo parámetro opcional que consiste en un 
+documento con opciones de cómo realizar la actualización. Este documento -
+parámetro puede tener dos claves, las dos opcionales:  
+• writeConcern : Se utiliza para indicar a MongoDB un nivel de confirmación 
+respecto a si el dato ha sido guardado correctamente. Normalmente, solo lo 
+usaremos en instalaciones con sharding o conjuntos de réplicas.  
+• Ordened : Este parámetro puede tomar los valores true (valor por defecto) o 
+false. Le indica a MongoDB si es necesario insertar los documentos en el 
+mismo orden en el que se envían o puede modificarse dicho orden. Si lo se  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+19 
+ configura true, entonces en caso de que ocurra algún fallo en la actualización 
+de un documento se abortará la carga. Si se configura false se omitirá el error 
+y la carga continuará sin problemas.  
+Inserción por medio de import  
+Mongoimport es una herramienta nativa de MongoDB, pero no se incluye por defecto 
+en la instalación estándar. Para utilizarla, es necesario  instalar el paquete mongodb -
+org-tools, que contiene diversas herramientas, incluida mongoimport.  
+Pasos para instalar mongodb -org-tools:  
+Paso 1.  Descargar la herramienta del sitio 
+https://www.mongodb.com/try/download/database -tools  
+ 
+Paso 2:  Instalar por defecto  
+Paso 3: Copiar la ruta donde se instaló la herramienta. Por ejemplo:  
+C:\Program Files \MongoDB \Tools \100\bin 
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+20 
+ Paso 4:  
+Ir a las variables de entorno Y Configurar una nueva variable de entorno. Esto produce 
+que se puedan ejecutar comandos de cualquier directorio de CMD  
+Luego pegar la ruta de la herramienta y confirmar los cambios.  
+Paso 5: Entrar a Mongo, crear la base de datos db bdNewPeli y luego la colección 
+películas.  
+Paso 6:  Iniciar otro cmd  
+ 
+ 
+Formato general de importación  
+mongoimport --db baseDatos --collection coleccion –-host localhost:puerto --type csv  
+--file archivo_a_importar  
+ 
+Ejemplo json:  
+ 
+mongoimport --db bdNewPeli --collection peliculas --jsonArray --host localhost:27017 -
+-file C: \infoPeliculas.json  
+ 
+Ejemplo csv:  
+ 
+mongoimport --db bdPagos --collection pagos –type csv --host localhost:27017 --file 
+C:\pagos.csv --headerline  
+ 
+Consulta de documentos  
+Se usa el método  find()  para consultar documentos.        Ejemplo:  db.libros.find(); 
+//muestra toda la información de la colección libros  
+ Una vez instalado este paquete se puede comprobar que funciona correctamente 
+ejecutando:  mongoimport –-help   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+21 
+ Formato general:  
+              db.collection.find({condición},{proyección})  
+Devuelve los campos indicados de los documentos que satisfacen las condiciones  
+• condición:  especifica condiciones o filtros   
+• proyección:  especifica los campos a mostrar  
+Veamos algunas observaciones al respecto:  
+• Las secciones condición y proyección son opcionales.  
+• Condición vacía devuelve todos los documentos (filas)  
+• Proyección vacía devuelve todos los campos (columnas)  
+• En la proyección para mostrar se usa un numero con el campo distinto de 0 y 
+para no mostrar un campo se usa un 0  
+• Existe la expresión findOne() que mostrará el primer documento que coincida 
+con la condición o condiciones.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+22 
+ Consultas sin condiciones  
+SQL NoSQL  
+Para la tabla productos:  
+select * from  productos;  
+ 
+select id, nombre from productos;   
+ 
+select nombre from cliente;   Para la colección productos:  
+ 
+db.productos.find()  
+ 
+db.productos.find({ },{nombre:1})  
+db.productos.find({},{nombre:1,_id:0})  
+ 
+Consultas con condiciones  
+SQL NoSQL  
+Para la tabla productos:  
+select nombre from productos 
+where   situacion= ‘A’;  
+select  nombre from productos 
+where situacion<>’A’;  
+select * from productos where 
+situacion=”A” or precio=5000;  Para la colección productos:  
+db.productos.find({situacion:”A”},{nombre:1,_id:0})  
+ 
+db.productos.find({situacion:{$ne:”A”}},{nombre:1, 
+_id:0})  
+db.productos.find({$or:[ situacion:”A”},{ 
+precio:5000}]})   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+23 
+ Operadores relacionales  
+                 
+Veamos algunos ejemplos:  
+• Mostrar todos los libros que tienen un precio mayor a 40000:   
+db.libros.find({ precio: { $gt:40000 }});  
+• Mostrar todos los libros que en el campo cantidad tiene 50 o más:  
+db.libros.find( { cantidad: { $gte : 50 }});  
+• Mostrar todos los libros que en el campo cantidad hay un valor distinto a 50:  
+db.libros.find( { cantidad: { $ne : 50 }});  
+ 
+ 
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+24 
+ • Mostrar todos los libros cuyo precio estén comprendidos entre 20000 y 45000:  
+db.libros.find( { precio: { $gte : 20000 , $lte : 45000}});  
+Operadores lógicos  
+Una condición «and» realiza una operación lógica «and» en una matriz de dos o más 
+expresiones. Selecciona los documentos en los que se cumplen  todas  las condiciones de las 
+expresiones.  
+{$and: [ { <expresion1> }, { <expresion2> }, ... , { <expresionN> } ] }  
+Una condición «or» realiza una operación lógica «or» en una matriz de dos o más expresiones. 
+Selecciona los documentos en los que al menos una de las expresiones es verdadera.  
+{$or: [ { <expresion1> }, { <expresion2> }, ... , { <expresionN> } ] }  
+Operador realiza una operación lógica «nor»  en una matriz utilizando una o varias 
+expresiones. A continuación, selecciona los documentos que no cumplen las expresiones de la 
+consulta. En términos más sencillos, hace lo contrario de la condición $or  
+{ $nor: [ { <expresion1> }, { <expresion2> }, ...  { <expresionN> } ] }  
+Operador realiza una operación lógica de «not»  en una matriz para la expresión especificada. 
+A continuación, selecciona los documentos que no coinciden con las expresiones de la 
+consulta. Esto incluye los documentos que no contienen el campo.  
+{campo: { $not: { <operador -expresion> } } }  
+Ordenamiento  
+consulta.sort(criterios)   
+criterios: documento con parejas {field: value} con value es 1 (ascendente) o -1 
+(descendente)  
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+25 
+ Veamos un ejemplo:  
+SQL NoSQL  
+Para la tabla productos:  select * 
+from productos where 
+situacion=”A” order by nombre 
+desc;  Para la colección productos:  
+db.productos.find({situacion:”A”}).sort({nombre: -
+1}) 
+ 
+ 
+Count : Devuelve la cantidad de documentos que satisfacen las condiciones.  
+ 
+Ejemplo:  
+• SQL:  Para la tabla productos  
+select count(*) from productos where situacion=”A”;  
+• NoSQL:  Para la colección productos  
+db.productos.count({situacion:”A”})  
+db.productos.find({situacion:”A”}).count()  
+• distinct  
+Devuelve los valores diferentes de cierto campo de los documentos que 
+satisfacen las condiciones.  
+ 
+ 
+ 
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+26 
+ Ejemplo:  
+• SQL:  Para la tabla productos  
+select distinct(precio) from productos;  
+• NoSQL:  Para la colección productos  
+db.productos.distinct(“precio”)  
+ 
+• Búsquedas de textos  
+Se utilizan para buscar coincidencias en donde la celda tenga una porción de 
+una cadena.  
+ 
+• Su formato es:  
+db.tu_coleccion.find({"campo": /.*busqueda.*/})  
+• Para ignorar si son mayúsculas o minúsculas:  
+db.tu_coleccion.find({"campo": /.*busqueda.*/i})  
+Ejemplo:   
+• SQL:  Para la tabla productos  
+select nombre from productos where nombre like ‘A%’  
+• NoSQL:  Para la colección productos  
+db.productos.find({nombre: /.*A./ });  
+ 
+ 
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+27 
+ Eliminación de documentos  
+Expresión  Función  Ejemplo  
+deleteOne  Borra el primer 
+documento que 
+cumple la 
+condición(es) que se 
+configuran.  db.collection.deleteOne({condición})  
+deleteMany  Borra todos los 
+documentos que 
+cumplen la 
+condición(es) que se 
+configuran.  db.collection.deleteMany({condición})  
+remove  Es otra alternativa 
+para eliminar uno o 
+más documentos. 
+Acepta dos 
+parámetros: la 
+condición y solo un 
+valor booleano que, si 
+se establece en 
+verdadero, elimina 
+solo un documento.  db.collection.remove({condición, 
+valor_booleano})   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+28 
+ El resultado de la ejecución de cualquiera de estas formas, dará como resultado en MongoDB la 
+cantidad de filas borradas.  
+Para la creación de condiciones de borrado se pueden utilizar los mismos operadores de 
+consultas.  
+Veamos algunos ejemplos:  
+Eliminación de todos los documentos  
+Se pueden eliminar todos los documentos de una colección usando deleteMany, remove o drop 
+sin condiciones.  
+Ejemplos:  
+db.libros.deleteMany({})  
+db.libros.remove({})  
+db.libros.drop()  
+Eliminación del primer documento con condición(es)  
+Ejemplos:  
+db.libros.deleteOne({copias:5});  
+db.libros.remove({copias:5}, true);  
+ 
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+29 
+ Eliminación de todos los documentos que cumplen condición(es)  
+Ejemplos:  
+db.libros.deleteMany({copias:5});  
+db.libros.remove({copias:5});  
+Mejores prácticas para eliminar documentos  
+Comprender lo que se está eliminando:  Antes de eliminar cualquier documento, es 
+importante comprender qué se está eliminando. Esto puede parecer obvio, pero muchos 
+errores de eliminación ocurren porque el desarrollador no entendió completamente qué estaba 
+eliminando. Por lo tanto, antes de el iminar cualquier documento, se debe comprender qué 
+contiene y cómo se relaciona con otros documentos en la base de datos.  
+Utilizar el método deleteOne():  El método deleteOne() es el método más básico para eliminar 
+documentos en MongoDB. Elimina el primer documento que coincide con los criterios de 
+consulta dados. Aunque es sencillo de utilizar, se debe tener cuidado al utilizarlo ya que sólo 
+elimina un doc umento a la vez. Si hay varios documentos que coinciden con los criterios de 
+consulta, solo se eliminará el primero.  
+Utilizar el método deleteMany():  Si se necesita eliminar varios documentos que coinciden con 
+un criterio de consulta, se puede utilizar el método deleteMany(). Este método elimina todos los 
+documentos que coinciden con los criterios de consulta dados. Sin embargo, se debe tener 
+cuidado a l utilizarlo, ya que puede provocar la eliminación de demasiados documentos a la vez.   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+30 
+ Utilizar el método findOneAndDelete():  El método findOneAndDelete() es similar al método 
+deleteOne(), pero también devuelve el documento eliminado. Esto puede resultar útil si necesita 
+una copia del documento que está eliminando. Sin embargo, este método es más lento que el 
+método deleteOne() porque necesita devolver el documento antes de eliminarlo.  
+Utilizar el método drop():  Si se necesita eliminar una colección completa, se puede utilizar el 
+método drop(). Este método elimina toda la colección, incluidos todos sus documentos e índices. 
+Sin embargo, se debe tener cuidado al usarlo, ya que elimina permanentemente toda la 
+colec ción.  
+Utilizar el método remove():  El método remove() es una forma antigua de eliminar 
+documentos en MongoDB. Elimina todos los documentos que coinciden con los criterios de 
+consulta dados. Sin embargo, este método ha quedado obsoleto en la versión 3.2 de MongoDB 
+y no debe usarse en proyec tos nuevos.  
+Hacer siempre una copia de seguridad antes de eliminar:  Antes de eliminar cualquier 
+documento, es una buena práctica realizar una copia de seguridad de la base de datos. Esto 
+permite restaurar la base de datos si algo sale mal durante la eliminación. MongoDB ofrece 
+varias herramientas para realizar copias de s eguridad de bases de datos, incluidos mongodump 
+y mongoexport.  
+Probar la consulta de eliminación antes de ejecutarla:  Antes de ejecutar una consulta de 
+eliminación, es una buena práctica probarla primero. Puede hacer esto ejecutando la consulta 
+como una consulta de selección y verificando los resultados. Esto permite ver qué documentos 
+se eliminarán antes de eliminarlos.  
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+31 
+ Actualización de documentos  
+Para actualizar datos, se utiliza el comando  update. Este comando, en su forma básica, recibe 
+dos parámetros: uno con la consulta para filtrar los documentos a modificar y otro con los 
+elementos que se modificarán.   
+Existen diferentes usos de update. Veamos los formatos.  
+Para actualizar el primer documento que coincida con la consulta  
+db.colección.updateOne({condición}, { $set:{ campo y valor a actualizar}})  
+db.colección.update({condición}, {$set:{ campo y valor a actualizar}})  
+Para actualizar todos los documentos que coincidan con la consulta  
+db.colección updateMany({condición}, {$set:{campo y valor a actualizar}})  
+db.colección.update({condición}, {$set:{campo y valor a actualizar}}, {multi:true})  
+Para insertar el documento si este no existe  
+db.colección.update({condición}, {campo y valor a actualizar}, {upsert:true})  
+El resultado de la ejecución de cualquiera de estas formas, dará como resultado en MongoDB la 
+cantidad de filas actualizadas.  Para la creación de condiciones de actualización se pueden utilizar 
+los mismos operadores de consultas.  
+Ejemplos  
+db.personas.updateOne({sexo:”F”}, { $set:{ Edad:26}})   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+32 
+ db.personas.update({sexo:”F”}, { $set:{ Edad:26}})  
+db.personas.updateMany({Sexo:”M”}, {$set:{Sueldo:570000}})  
+db.personas.update({Sexo:”M”}, {$set:{Sueldo:600000}}, {multi:true})  
+db.personas.update({Edad:25}, {Sueldo:580000}, {upsert:true})  
+Operaciones CRUD en subdocumentos  
+Documentos embebidos  
+Hasta ahora se ha trabajado definiendo documentos con una serie de campos que almacenan 
+tipos de datos simples como enteros, reales, cadenas de caracteres y fechas.  
+Si se tiene que almacenar datos de una empresa, pero la dirección se debe discriminar por calle, 
+número, comuna y ciudad, se tendría que crear un documento embebido o subdocumento.  
+Los documentos embebidos o subdocumentos permiten crear relaciones uno a muchos (1:N) 
+presentes en las bases de datos relacionales, pero en un mismo documento. Veamos ejemplos.  
+ 
+• Inserción  
+ 
+use base_semana4  
+db.empresa.drop()  
+  
+db.clientes.insertOne(  
+  { 
+    _id: 1,   
+    nombre: 'IPFactory',  
+    mail: 'informacion@ipfactory.com',  
+     direccion: {   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+33 
+       calle: 'Colon',  
+      numero: 620,  
+      comuna: 'Las Condes',  
+      ciudad: 'Santiago'   
+    } 
+  } 
+) 
+  
+db.clientes.insertOne(  
+  { 
+    _id: 2,   
+    nombre: 'SubTerra',  
+    mail: 'contacto@subterra.com',  
+     direccion: {  
+      calle: 'miraflores',  
+      numero: 1200’,  
+      comuna: 'Peñalolen',  
+      ciudad: 'Santiago'   
+    } 
+  } 
+) 
+db.clientes.insertOne(  
+  { 
+    _id: 3,   
+    nombre: 'TDrone',  
+    mail: 'servicio@pdrone.com',  
+     direccion: {   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+34 
+       calle: 'Acacias',  
+      numero: 894,  
+      comuna: 'Maipú',  
+      ciudad: 'Santiago'   
+    } 
+  } 
+) 
+  
+  
+  
+  
+  
+  
+db.clientes.insertOne(  
+  { 
+    _id: 4,   
+    nombre: 'SFacet',  
+    mail: 'personas@isfacet.com',  
+     direccion: {  
+      calle: 'Pasten',  
+      numero: 1350,  
+      comuna: 'Las Condes',  
+      ciudad: 'Santiago'   
+    } 
+  } 
+ 
+)  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+35 
+ Consultas  
+Para mostrar todas las empresas con dirección 'Colon' se debe realizar la siguiente consulta:  
+db.clientes.find({'direccion.calle':'Colon'})  
+Es obligatorio usar las comillas cuando se hace referencia a un subcampo de un 
+documento embebido,  ejemplo: 'direccion.calle'.  
+Para mostrar todas las empresas con donde su número está comprendido entre 1 y 1000 la 
+siguiente consulta puede ser:  
+db.clientes.find({'direccion.numero':{$gte:0},'direccion.numero':{$lte:1000}})  
+Actualización  
+Actualizar la dirección, número y ciudad de TDrone a calle los aramos, número 455, comuna 
+Machalí y ciudad Rancagua.  
+db.clientes.updateOne({nombre: 'TDrone'},{$set:{'direccion.calle': 'Los Aromos', 
+'direccion.numero':455,'direccion.comuna':'Machalí','direccion.ciudad': 'Rancagua'}})  
+Eliminación  
+Borrar los clientes de la ciudad de Santiago.  
+db.clientes.deleteMany({'direccion.ciudad': 'Santiago'})  
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+36 
+ Arreglos o listas  
+Creación de arreglos por medio de variables  
+Formato:  
+var nombre_arreglo=[valor1, valor2,….,valorN]   
+Ejemplo:  
+var valores1 = [1,3,5]  
+var valores2 = [2,4,6]  
+Asignación  de arreglos  por medio  de variables:  
+var usuario1 = {nombre: "Juan Perez", escala: valores2}  
+var usuario2 = {nombre: "Ana Moya", escala: valores1}  
+ 
+Ingresando documentos de tipo arreglo a la colección  
+db.ejemplo_arreglo.insert( usuario1)  
+db.ejemplo_arreglo.insert( usuario2)  
+Para verificar:  
+db.ejemplo_arreglo.find()  
+Agregando valores al arreglo con $AddToSet  
+Este método busca dentro de un arreglo el valor que se quiere ingresar, si está no lo 
+inserta y si no se encuentra lo inserta en la última posición.   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+37 
+ Ejemplo:  
+db.ejemplo_arreglo.update({}, {$addToSet: { escala : 4 } } )  
+Para  verificar:  
+db.ejemplo_arreglo.find()  
+db.ejemplo_arreglo.updateMany({}, {$addToSet: { escala : 4 } } )  
+Para  verificar:  
+db.ejemplo_arreglo.find()  
+Nota:  Si se usa upate busca solo la primera coincidencia, como en el primer 
+documento hay un 4 no lo vuelve a insertar, por otro lado, al usar updateMany busca 
+en todos los documentos e inserta el valor en el segundo documento al final de este.  
+ 
+Agregando valores al arreglo con $push  
+Este método inserta en la última posición, si está o no está el valor a insertar  
+Ejemplo:  
+db.ejemplo_arreglo.update( {}, {$push : { escala : 4} })  
+db.ejemplo_arreglo.find();  
+db.ejemplo_arreglo.updateMany( {}, {$push  : { escala : 4} })  
+db.ejemplo_arreglo.find();   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+38 
+ Nota:  Si se usa upate busca solo la primera coincidencia, inserta el valor 4 al final del 
+primer documento; por otro lado, al usar updateMany busca en todos los 
+documentos e inserta el valor al final de cada documento.  
+ 
+Agregando más de un valor con $each  
+Este método permite insertar más de un valor al arreglo; solo inserta los valores que 
+no se encuentran en el arreglo al final de este.  
+Ejemplo:  
+db.ejemplo_arreglo.updateMany ( {}, {$addToSet: { escala : {$ each : [5,6]} } } )  
+db.ejemplo_arreglo.find();  
+Para insertar valores a un arreglo en una posición especifica se puede usar $position  
+Ejemplo:  
+db.ejemplo_arreglo.updateMany( {}, {$push: { escala: {$each : [100, 101],   
+$position: 4 } } } )  
+db.ejemplo_arreglo.find();  
+ 
+Los índices en arreglos de MongoBD comienzan en 0  
+Para ordenar los valores del arreglo se usa $sort  
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+39 
+ Ejemplo:  
+db.ejemplo_arreglo.update( {}, {$push : { escala: {$each : [95, 97], $sort:1 } } } )  
+db.ejemplo_arreglo.find();  
+ 
+Eliminación de elementos de un arreglo  
+Para eliminar un elemento de un arreglo, se usa $pull  
+Ejemplo:  
+db.ejemplo_arreglo.updateMany( {}, {$pull : { escala : 100 }  } ) 
+db.ejemplo_arreglo.find();  
+Se puede eliminar con intervalos de valores:  
+Ejemplo:  
+ db.ejemplo_arreglo.updateMany( {}, {$pull : { escala : {$gte : 50} } } )  
+db.ejemplo_arreglo.find();  
+Para eliminar más de un elemento de un arreglo, se usa $pullAll  
+Ejemplo:  
+db.ejemplo_arreglo.updateMany( {}, {$pullAll : { escala : [4, 5] } } )  
+db.ejemplo_arreglo.find();  
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+40 
+  
+Consulta de arreglos  
+Para mostrar solo los elementos del arreglo  
+Ejemplo:  
+db.ejemplo_arreglo.find( {}, { _id:0 , escala:1 } )  
+Para mostrar una cantidad determinada de elementos del arreglo se usa $slice  
+Ejemplo:  
+db.ejemplo_arreglo.find( {}, { _id:0, nombre:1, escala : {$slice : 2} } )  
+ Si el valor de la visualización es negativo mostrará los valores desde el final del 
+arreglo.  
+Ejemplo:  
+db.ejemplo_arreglo.find( {}, { _id:0, nombre:1, escala : {$slice : -2} } )  
+También se puede definir un intervalo de valores a mostrar  
+Ejemplo:  
+db.ejemplo_arreglo.find( {}, {_id: 0, nombre:1, escala: {$slice : [1, 3] } } )  
+En este ejemplo muestra los valores de la posición 1 a la 3  
+ Para realizar comparaciones con elementos del arreglo  
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+41 
+ Ejemplo:  
+db.ejemplo_arreglo.find({ escala: 6 },{_id:0, escala:1})  
+ Se puede usar $all para buscar más de un valor en documentos  
+Ejemplo:  
+db.ejemplo_arreglo.find({ escala: {$all:[6,2]} },{_id:0, escala:1})  
+Usando el operador $all se buscan varios elementos dentro de un arreglo, 
+especificando como entrada un arreglo de elementos a buscar. En el ejemplo se está 
+buscando todas las escalas que contengan 6 y 2. Sólo se devolverán los documentos 
+que contengan ambo s valores. Esto corresponde a un Y lógico.  
+ También para realizar comparaciones con los elementos del arreglo se puede usar 
+$in o $nin  
+Ejemplo:  
+db.ejemplo_arreglo.find( { escala: { $in : [ 6 ] } }, {_id:0, escala:1} )  
+ Si se agregan valores después del 6, estos serán evaluados como un o lógico en la 
+consulta  
+Ejemplo:  
+db.ejemplo_arreglo.find( { escala: { $nin : [ 2,5 ] } }, {_id:0, escala:1} )  
+Otro operador es $size que busca arreglos con un determinado tamaño  
+Ejemplo:   
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+42 
+ db.ejemplo_arreglo.find( { escala: { $size:3 } } ,{_id:0, escala:1})  
+Dot Notation  
+Se utiliza en para realizar consultas en arreglos y en subdocumentos. Se basa en 
+añadir un punto después del identificador del arreglo o subdocumento para realizar 
+consultas sobre un índice en concreto del arreglo o sobre un campo concreto del 
+subdocumento .  
+Ejemplo:  
+db.ejemplo_arreglo.find( { "escala.0": 2  },{_id:0, escala:1})  
+En el ejemplo buscamos todos los documentos que cumplan la condición de que el 
+valor 0 del arreglo sea 2, el uso de comillas es obligatorio.  
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+43 
+ En síntesis, en este recurso de la asignatura aprendiste que MongoDB  es una base de datos 
+gratuita y multiplataforma que puede ser  usada mediante comandos  en distintos formatos 
+gráficos, ya sea por medio de cmd o por medio de MongoBD Compass.  
+Por otro lado, es importante conocer la definición de arreglos y sus métodos, pues estos 
+permiten generar colecciones de información mucho más cercanos a la realidad con una rapidez 
+de procesamiento de consultas muy elevado. MongoBD tiene una serie de coma ndos para 
+insertar, consultar, eliminar y actualizar documentos, los diferentes formatos están disponibles 
+en las versiones de MongoDB pero, con el paso del tiempo, algunos de ellos han quedado 
+obsoletos; se recomienda según la versión a utilizar verificar  la documentación.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+Unidad 2: Operaciones esenciales con MongoDB  
+44 
+ Bibliografia  
+• Iglesias, A; Cuadra, D; Castro, E.  (2014). Desarrollo de bases de datos.  RA-MA 
+Editorial.   
+• Sarasa, A. (2026).  Introducción a las bases de datos NoSQL usando MongoDB . Editorial 
+UOC.  https://elibro.net/es/lc/inacap/titulos/58524  
+ 
+ 
+ 
+ 
+ 
+ 
+--- TIEV32_U3_S5_GLO.pdf ---
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Agregaciones:  Las operaciones de agregación en MongoDB son herramientas dentro de MQL 
+(MongoDB Query Language) que nos permiten procesar documentos de manera avanzada y 
+obtener resultados calculados.  
+ 
+ 
+Expresiones regulares:  Son secuencias de caracteres que forman un patrón de búsqueda. Se 
+utilizan para realizar búsquedas complejas y manipulaciones de texto. En MongoDB, puede 
+utilizar expresiones regulares en sus consultas para encontrar documentos que coincidan con 
+ciertos patrones de texto.  
+ 
+ 
+ 
+ 
+Base s de datos no estructuradas  
+Unidad 3 
+A 
+E Glosario   
+ 
+Unidad 3: Búsqueda avanzada con MongoDB  
+2 
+  
+Filtros : Los operadores de filtros en MongoDB son  herramientas poderosas que permiten 
+realizar consultas precisas y avanzadas en colecciones de documentos.  
+ 
+Iteración : Significa repetir varias veces un proceso con la intención de alcanzar una meta 
+deseada, objetivo o resultado.  
+ 
+ 
+Librería : Las librerías de programación son herramientas para hacer que el desarrollo de 
+software sea más eficiente. Proporcionan fragmentos de código reutilizables que los 
+desarrolladores pueden utilizar para programar de forma rápida y sencilla.  
+ 
+ 
+Normas de seguridad informática: Son estándares de confiabilidad, supervisados por el 
+equipo de TI y mantenidos por buenas prácticas.  
+ F 
+I 
+L 
+N  
+ 
+Unidad 3: Búsqueda avanzada con MongoDB  
+3 
+  
+Phyton : Es un lenguaje de programación ampliamente utilizado en las aplicaciones web, el 
+desarrollo de software, la ciencia de datos y el machine learning (ML). Los desarrolladores 
+utilizan Python porque es eficiente y fácil de aprender, además de que se puede ejec utar en 
+muchas plataformas diferentes. El software Python se puede descargar gratis, se integra bien a 
+todos los tipos de sistemas y aumenta la velocidad del desarrollo.  
+ 
+ 
+Seguridad informática : La seguridad  informática se encarga de mantener la confidencialidad 
+de los datos de tu organización y de recuperar el control mediante el uso de recursos de gestión 
+de riesgos en el caso de que se haya producido algún incidente.  
+ P 
+S 
+--- TIEV32_U3_S5_LEC.pdf ---
+ 
+ 
+ 
+ 
+ 
+ 
+Índice  
+ 
+I. Selección de filtros y condiciones según requerimientos de búsqueda  
+II. Búsqueda avanzada usando expresiones regulares  
+III. Comandos de búsqueda en subdocumentos con iteración y asociaciones lógicas  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Descargable  Bases de datos no estructuradas  
+Unidad 3: Búsqueda avanzada con MongoDB   
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+2 
+ Introducción  
+En esta unidad, explorarás cómo seleccionar información en MongoDB usando filtros, 
+condiciones y documentos anidados. Aprenderás a usar patrones de expresiones regulares 
+para búsquedas avanzadas en campos específicos.  
+También conocerás cómo integrar MongoDB con Python mediante la librería PyMongo, 
+permitiéndote realizar consultas y operaciones en la base de datos de manera eficiente.  
+  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+3 
+ Selección de filtros y condiciones según requerimientos de 
+búsqueda  
+La habilidad para organizar comandos y conformar rutinas de búsqueda en MongoDB es de 
+suma importancia en el ámbito del manejo de datos modernos.  
+A medida que las organizaciones acumulan vastas cantidades de información no 
+estructurada, la capacidad de extraer datos relevantes de manera eficiente se convierte en 
+una competencia crítica. Este aprendizaje no solo permite optimizar el rendimiento de la s 
+consultas y mejorar la velocidad de acceso a la información, sino que también facilita la toma 
+de decisiones informadas basadas en datos precisos y pertinentes. Además, al dominar la 
+selección de filtros y condiciones según requerimientos específicos de búsqueda, los 
+profesionales pueden asegurar que sus rutinas de búsqueda sean tanto precisas como 
+eficientes, reduciendo la carga sobre los sistemas y mejorando la productividad general. En 
+un mundo donde la información correcta en el momento adecuado puede  significar una 
+ventaja competitiva, este aprendizaje se erige como una herramienta esencial para cualquier 
+profesional del análisis de datos y desarrollo de software.  
+En el manejo de bases de datos NoSQL, como MongoDB, la capacidad de organizar y 
+estructurar comandos para conformar rutinas de búsqueda es fundamental. Esta habilidad 
+permite a los desarrolladores y analistas de datos extraer información precisa y útil de 
+grandes volúmenes de datos almacenados en documentos, subdocumentos y arreglos.  la 
+selección de filtros y condiciones basados en requerimientos específicos de búsqueda. La 
+correcta implementación de estos filtros y condiciones es esencial para garantizar q ue las 
+rutinas de búsqueda produzcan resultados relevantes y precisos. Los estudiantes aprenderán 
+a identificar los requerimientos de búsqueda, seleccionar los filtros adecuados y aplicar 
+condiciones precisas para obtener la información deseada. Este conoc imiento es crucial no 
+solo para mejorar la eficiencia en la recuperación de datos, sino también para asegurar que 
+las consultas sean optimizadas y pertinentes a los objetivos del análisis o desarrollo en 
+cuestión.  
+Filtros y condiciones: ejemplos prácticos  
+Se parte del siguiente contexto:   
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+4 
+  
+Consultas  
+ 
+1. Mostrar los amigos con edad mayor o igual a 40 años, solo se debe visualizar el 
+apellido de la persona, el nombre y la edad del amigo.  
+ 
+ 
+ 
+ 
+2. Mostrar el primer amigo de Luis Martinez; se debe visualizar toda la información del 
+amigo.  
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+5 
+  
+ 
+3. Mostrar el segundo amigo registrado de Luis Martínez, se debe visualizar toda la 
+información del amigo.  
+ 
+ 
+4. Mostrar nombre, apellidos, edad y nombre del amigo de las personas mayores de 25 
+años y cuyo amigo sea Juan.  
+ 
+ 
+5. Mostrar nombre, apellidos de las personas con afición fútbol, ordenar por apellido 
+de forma descendente.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+6 
+ Actualizaciones  
+ 
+1. Actualizar la afición de las personas que les gusta el Fútbol por Guitarra. Mostrar los 
+cambios con find.  
+ 
+ 
+ 
+ 
+2. Agregar al final de cada persona una nueva afición llamada Lectura. Mostrar los 
+cambios con find.  
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+7 
+   
+ 
+ 
+ 
+3. Agregar un amigo más a cada Persona al inicio de la estructura. Los nombres y 
+edades deben ser distintos.  
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+8 
+  
+ 
+ 
+ 
+ 
+ 
+Eliminaciones  
+ 
+1. Eliminar las personas que tengan edad 28 o amigos de nombre Juan.  
+ 
+ 
+ 
+2. Eliminar las personas cuyos amigos tengan edad mayor a 23 años.  
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+9 
+  
+ 
+ 
+3. Eliminar las personas que tengan afición tenis o natación.  
+ 
+Operaciones de agregaciones: ejemplos prácticos  
+Las operaciones de agregación son herramientas de MQL (MongoDB Query Language)  que 
+nos ayudan a procesar documentos y retornar resultados calculados.  
+Las operaciones de agregación se utilizan mayoritariamente para:  
+• Agrupar valores de varios documentos.  
+• Procesamiento y operaciones matemáticas.  
+• Analizar cambios de datos a lo largo del tiempo.  
+A su vez, las operaciones de agregaciones se pueden realizar de dos principales formas:  
+1. Tuberías y transformaciones.  
+2. Métodos de agregación de propósito único.  
+Tuberías y transformaciones  
+Para realizar el procesamiento de documentos, MongoDB se basa en el “Patrón de filtro de 
+tubería”, utilizado comúnmente en arquitecturas de software y sistemas operativos Unix.  
+Este patrón consta de una o más etapas, en donde cada etapa realiza una operación con los 
+datos de entrada. A su vez, la salida o resultado se la entrega a la siguiente etapa para su 
+procesamiento.  
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+10 
+ Para aplicar este patrón, MongoDB nos entrega el método  aggregate()  . Este método recibe 
+un array de operaciones (más conocidas como tuberías) las cuales se ejecutarán en secuencia 
+una por una hasta llegar al resultado esperado.  
+ 
+Ejemplo de funcionamiento:  
+  
+ 
+Estos son los operadores más utilizados en tuberías:  
+ 
+• Filtrado de documentos con criterios:  $match.  
+• Orden de documentos:  $sort.  
+• Selección de campos en específico:  $project.  
+• Agrupación de documentos:  $group.  
+ 
+Agrupación de documentos  
+Para separar los documentos en grupos según una “clave de grupo”. Se utiliza el 
+operador  $group y el resultado es un documento para cada clave de grupo única, similar 
+a group by  en SQL. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+11 
+ Veamos la aplicación en dos ejemplos:  
+Ejemplo 1  
+ 
+ 
+Uso de match  
+1. Mostrar los usuarios que tiene 40 años.  
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+12 
+ Uso de sort  
+2. Mostrar todos los usuarios ordenados por edad de forma descendente.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+13 
+ Uso de proyect  
+3. Mostrar solo la edad y el nombre de los usuarios.  
+ 
+ 
+Agrupación  
+4. Mostrar el promedio de las edades de los usuarios.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+14 
+ 5. Mostrar la suma de las edades de los usuarios.  
+ 
+6. Mostrar la edad mínima de los usuarios.  
+ 
+ 
+7. Mostrar la edad máxima de los usuarios.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+15 
+ Ejemplo 2  
+ 
+ 
+ 
+1. Mostrar el número de sesiones que ha realizado cada persona.  
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+16 
+  
+2. Mostrar el número de sesiones realizadas por mes.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+17 
+  
+3. Mostrar la suma de los kilómetros por persona.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+18 
+ 4. Mostrar los kilómetros que corre cada uno de promedio al mes.  
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+19 
+ 5. Mostrar la mayor y menor distancia recorrida por los corredores.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+20 
+ 6. Mostrar el promedio de los kilómetros mensuales de cada corredor, pero solo para 
+aquellos valores donde el promedio sea sobre 5km.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+21 
+  
+7. Mostrar el promedio de los kilómetros por corredor y mes, ordenar por mes de 
+forma ascendente.  
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+22 
+ 8. Mostrar las distancias recorridas en millas, sabiendo que una milla = 1,60934 km.  
+ 
+            
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+23 
+ Búsqueda avanzada usando expresiones regulares  
+Expresiones regulares  
+Las expresiones regulares (regex) son una poderosa herramienta utilizada en MongoDB 
+para realizar búsquedas avanzadas y complejas en bases de datos NoSQL.  Estas expresiones 
+permiten a los desarrolladores y analistas de datos encontrar patrones específicos dentro 
+de documentos, proporcionando una mayor flexibilidad y precisión en la extracción de 
+información.  Es un mecanismo muy útil para recuperar cadenas.  MongoDB usa la librería 
+Perl Compatible Regular Expression (PCRE) para gestionar las expresiones regulares  de 
+manera que cualquier expresión regular permitida por PCRE es permitida en MongoDB.   
+Importancia de las expresiones regulares en búsquedas. En entornos de datos grandes y no 
+estructurados, como los que maneja MongoDB, las expresiones regulares son cruciales para 
+satisfacer una amplia variedad de requerimientos de búsqueda. Permiten buscar y filtrar 
+datos de manera eficiente, no solo en campos específicos, sino también a través de 
+documentos y subdocumentos.  
+Aplicaciones prácticas del uso de expresiones regulares en búsquedas  
+1. Búsquedas de Texto : Encuentran palabras o frases dentro de campos de texto.  
+2. Validación de Datos : Verifican que los datos ingresados cumplan con un 
+formato específico, como correos electrónicos o números de teléfono.  
+3. Filtrado Avanzado : Permiten buscar patrones dentro de grandes volúmenes de 
+datos, lo que es particularmente útil en análisis de datos y minería de datos.  
+MongoDB incorpora soporte nativo para expresiones regulares en sus operaciones de 
+búsqueda, lo que facilita su integración y uso directo en consultas.  Esto mejora 
+significativamente la capacidad de los desarrolladores para implementar soluciones de 
+búsqueda robustas y eficientes en aplicaciones que dependen de bases de datos NoSQL.  
+ 
+ 
+ 
+  
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+24 
+ Formato : { <field>: { $regex: /pattern/, $options: '<options>' } }  
+ 
+Veamos la aplicación en dos ejemplos:  
+Ejemplo 1  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+25 
+ 1. Mostrar los empleados cuyo nombre comience con la letra P.  
+ 
+ 
+ 
+ 
+2. Mostrar todos los empleados cuyo nombre termine con la letra Z, sea mayúscula o 
+minúscula; se debe visualizar solo el nombre del empleado.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+26 
+ 3. Mostrar los empleados donde las áreas sean SAS o SOP, visualizar solo el nombre 
+del empleado y el área, ordenar por nombre del empleado de forma descendente   
+ 
+ 
+ 
+4. Mostrar los empleados que trabajan en las áreas cuyo nombre comience con R y 
+termine en 8; visualizar el nombre, edad y área del empleado.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+27 
+ 5. Mostrar los empleados que trabajan en las áreas cuyo nombre tenga un 5; visualizar 
+el nombre, edad y área del empleado.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+28 
+ 6. Mostrar los empleados de las áreas SAS y SOP; visualizar el nombre, edad y área del 
+empleado.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+29 
+ 7. Mostrar los empleados cuyo departamento comience con tres letras; visualizar el 
+nombre y área del empleado.  
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+30 
+ 8. Mostrar los empleados cuyo departamento comience con una letra y el segundo 
+carácter sea número; visualizar el nombre y área del empleado.  
+ 
+ 
+ 
+9. Mostrar los empleados cuyo nombre de área comience con 3 letras y termine con 
+letra o número, además debe ser mayor a 30 años; visualizar el nombre, edad y área 
+del empleado.  
+ 
+ 
+ 
+Comandos de búsqueda en subdocumentos con iteración y 
+asociaciones lógicas  
+Trabajando con Python y MongoDB  
+PyMongo  es el paquete de controladores oficial  para controlar MongoDB con Python, es decir, 
+permite unir estas dos tecnologías.  Desde la consola de MongoDB, se tiene control absoluto 
+de sobre las bases de datos, colecciones y documentos; sin embargo, cuando se qu iere usar 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+31 
+ esta base de datos con aplicaciones o script desarrollados en Python, se necesita un 
+intermediario para realizar distintas operaciones.  
+Un intermediario que puede proporcionar esta comunicación es PYMONGO, una librería que 
+sirve como para trabajar con Python y MongoDB. Revisemos su instalación y las primeras 
+acciones allí.  
+Instalación de pymongo  
+• Se debe ejecutar pip install pymongo desde el terminal.}  
+• Luego se debe ingresar a MongoDB, por ejemplo, con Compass Haciendo clic 
+en Connect  
+• Se abre cualquier editor de Python  
+• Se realizan las primeras acciones que son de importación y conexión:  
+• Luego se crea una nueva base de datos y se muestra su creación, en este caso 
+no mostrará la base de datos creada porque esta está vacía  
+• Luego se crea la colección  
+• Se puede verificar que la base de datos ha sido creada con:  
+ 
+• Se crea ahora un documento en la colección:  
+ 
+• Se verifica en MongoDB, por ejemplo, en la Shell:  
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+32 
+  
+• Se verifica en la base de datos bd_ejemplo  
+       
+ 
+• En Python para ver la cantidad de documentos de la colección:  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+33 
+ • Para insertar más de un documento desde Python:  
+ 
+Consultas desde Python  
+Para mostrar todos los documentos desde Python:  
+ 
+ 
+Para mostrar todas las personas con edad mayor a 25 años:  
+ 
+Para mostrar el primer documento donde las personas tengan edad menor a 25 años:  
+Ahora la consulta no entrega un arreglo por lo que no es necesario recorrer, se guarda 
+en una variable llamada, por ejemplo, doc.  
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+34 
+ Eliminaciones  
+Para eliminar la primera persona registrada que tiene 20 años:  
+ 
+ 
+Para verificar:  
+ 
+ 
+Actualizaciones  
+Actualizar la edad de las personas de 24 a 25 años:  
+ 
+Para verificar:  
+ 
+ 
+Con subdocumentos  
+ 
+1. Importación de librerías:  Para interactuar con MongoDB desde Python, 
+utilizamos la librería pymongo. Primero, debemos instalar la librería (si no está 
+instalada) y luego importarla en nuestro script de Python.  
+2. Creación de la conexión:  Después de importar pymongo, el siguiente paso es 
+crear una conexión a nuestra base de datos MongoDB. Para esto, necesitamos 
+la URL de conexión de nuestra instancia de MongoDB.  
+3. Selección de la Base de Datos:  Una vez establecida la conexión, seleccionamos 
+la base de datos que vamos a utilizar. Si la base de datos no existe, MongoDB la 
+creará automáticamente cuando insertamos el primer documento.   
+4. Selección de la colección:  Dentro de la base de datos, seleccionamos la 
+colección donde almacenaremos nuestros documentos. Similar a la base de 
+datos, si la colección no existe, MongoDB la creará cuando insertamos el primer 
+documento.  
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+35 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+36 
+ Inserción de datos desde Python  
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+37 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+38 
+ Se ejecuta y verifica en MongoDB Compass:  
+ 
+ 
+ 
+Consultas  
+1. Mostrar todos los trabajadores con gastos 0 en cualquier tipo de compra; 
+visualizar solo el nombre, apellido puesto y edad.  
+ 
+ 
+ 
+2. Mostrar todos los trabajadores con edad 30 años y con gastos en cualquier tipo 
+de compra mayores o iguales a 180000; visualizar solo el nombre, apellido 
+puesto y edad.  
+ 
+ 
+ 
+3. Mostrar todos los trabajadores con gastos de 4000 en cualquier tipo de compra 
+y sea de la sede Rancagua; visualizar solo el nombre, apellido puesto y sede.  
+ 
+ 
+ 
+       
+ 
+ 
+ 
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+39 
+ En síntesis, has aprendido que aplicar filtros y condiciones en consultas de MongoDB es 
+esencial para el análisis de datos y desarrollo de software. MongoDB permite crear 
+búsquedas y documentos embebidos, y realizar búsquedas avanzadas con expresiones 
+regulares.  
+También aprendiste a usar MongoDB con Python mediante PyMongo. MongoDB puede 
+conectarse con varios lenguajes de programación, y es crucial tener una conexión 
+adecuada para realizar operaciones de manera óptima y confiable, asegurando la eficiencia 
+en consu ltas, eliminaciones y actualizaciones.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+Unidad 3: Búsqueda avanzada  con MongoDB  
+40 
+ Bibliografia  
+• Iglesias, A; Cuadra, D; Castro, E.   (2014). Desarrollo de bases de datos.  RA-MA 
+Editorial.   
+• Sarasa, A.  (2026).  Introducción a las bases de datos NoSQL usando MongoDB . Editorial 
+UOC.  https://elibro.net/es/lc/inacap/titulos/58524  
+ 
+ 
+ 
+ 
+ 
+ 
