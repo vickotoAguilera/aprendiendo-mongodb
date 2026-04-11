@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Terminal } from "@/components/Terminal";
-import { Database, FolderCheck, Cpu, BrainCircuit, BookOpen, ChevronRight, RotateCcw } from "lucide-react";
+import { Database, FolderCheck, Cpu, BrainCircuit, BookOpen, ChevronRight, RotateCcw, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { modules, Lesson, Module } from "@/lib/levels";
 
@@ -126,6 +126,24 @@ export default function Home() {
      setIsGeneratingCase(false);
   };
 
+  const askHelp = async () => {
+      const question = window.prompt("¿Qué comando o concepto olvidaste? La IA te responderá rápido y te dará un ejemplo de sintaxis.");
+      if (!question) return;
+
+      window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "🔎 Consultando tus dudas con el Tutor..." }));
+      try {
+          const res = await fetch("/api/ai/ask-help", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ question })
+          });
+          const data = await res.json();
+          window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: data.error ? ("Error: " + data.error) : data.message }));
+      } catch (e) {
+          window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "Error de red al consultar la duda." }));
+      }
+  };
+
   const handleSidebarClick = (mI: number, lI: number) => {
       setActiveModuleIndex(mI);
       setActiveLessonIndex(lI);
@@ -161,6 +179,13 @@ export default function Home() {
               <FolderCheck size={14} className="text-emerald-400" />
               BD Activa: <span className="text-emerald-400 font-mono">{state?.activeDb || 'test'}</span>
             </span>
+            <button 
+              onClick={askHelp}
+              disabled={isLoadingAi}
+              className="px-4 py-2 bg-indigo-900/40 text-indigo-200 hover:bg-indigo-600 hover:text-white transition-all rounded-full text-xs border border-indigo-500/30 font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-50 shadow-inner"
+            >
+               <HelpCircle size={14} /> Preguntar Comando
+            </button>
             <span className="px-4 py-2 bg-fuchsia-900/30 text-fuchsia-200 rounded-full text-xs border border-fuchsia-500/30 font-semibold flex items-center gap-2">
                <BrainCircuit size={14} /> Tutor Groq Activo
             </span>

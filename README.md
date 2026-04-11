@@ -12,7 +12,8 @@ Bienvenido a la plataforma de aprendizaje de MongoDB más completa, interactiva 
 This project **does not simulate** a database. It executes commands securely over a **REAL, NATIVE** MongoDB installation running on your own computer.
 
 *   **MongoDB Server**: You MUST have MongoDB Community Server installed and running locally.
-    *   *Warning for Older CPUs*: Modern MongoDB (v5.0+) requires AVX CPU instructions. If your computer is older and crashes or won't install the latest version, download **MongoDB v4.4.30** from the [MongoDB Community Server Archive](https://www.mongodb.com/try/download/community).
+    *   *Always try to install the LATEST version available (v7 or v8).*
+    *   *Fix for Older CPUs*: If your computer is older and crashes or won't install the latest version (due to missing AVX CPU instructions), download **MongoDB v4.4.30** from the [MongoDB Community Server Archive](https://www.mongodb.com/try/download/community). It works perfectly for this project.
 *   **Mongosh CLI**: You must download the separate shell client: [MongoDB Shell Download](https://www.mongodb.com/try/download/shell).
     *   Extract the `.zip` file (e.g., to `C:\mongosh`).
     *   You **MUST** add `C:\mongosh\bin` to your Windows Environment Variables (`PATH`). The project executes `mongosh` via pure Node.js spawn processes, so Windows needs to recognize the command globally.
@@ -39,9 +40,10 @@ To unlock the intelligent tutor that reads your terminal logs and grades your co
 ### 1. Requisitos (Paso Crucial)
 Este proyecto **no simula** una base de datos de juguete. Ejecuta comandos de manera real sobre un servidor **ATIVO** de MongoDB que corre en tu propia computadora.
 
-*   **Servidor MongoDB**: DEBES instalar MongoDB Community Server de manera local.
-    *   *Aviso para Procesadores Antiguos*: El MongoDB moderno (v5.0+) requiere un procesador con instrucciones AVX. Si tu PC falla o el servicio crashea al iniciar, se recomienda altamente descargar la versión **MongoDB v4.4.30** desde el [Archivo de MongoDB Server](https://www.mongodb.com/try/download/community).
-*   **Mongosh CLI**: Tienes que descargar obligatoriamente la nueva terminal shell: [Descarga de MongoDB Shell](https://www.mongodb.com/try/download/shell).
+*   **Servidor MongoDB**: DEBES tener MongoDB Community Server instalado en tu PC de forma local.
+    *   *Se recomienda descargar siempre la ÚLTIMA versión disponible (v7 o v8) para computadoras modernas normales.*
+    *   *Parche para PCs de bajos recursos:* Si tu PC es algo antigua y la instalación de las versiones nuevas arroja error o crashea inesperadamente (ya que las versiones modernas exigen procesadores con instrucciones AVX), no te preocupes. Baja con confianza la versión **MongoDB v4.4.30** desde el [Archivo de MongoDB Server](https://www.mongodb.com/try/download/community). Funciona estupendo e idéntico para este proyecto.
+*   **Mongosh CLI**: Independientemente de tu versión, debes bajar la nueva consola separada: [Descarga de MongoDB Shell](https://www.mongodb.com/try/download/shell).
     *   Extrae el archivo `.zip` en una ruta sencilla, por ejemplo `C:\mongosh`.
     *   **DEBES** agregar la ruta `C:\mongosh\bin` a las Variables de Entorno de Windows (`PATH`). El proyecto ejecutará `mongosh` puramente detrás de escena, así que Windows necesita reconocer esa palabra por consola globalmente.
 

@@ -49,7 +49,7 @@ export const modules: Module[] = [
       {
          id: "m1-test",
          title: "Prueba Modular: El Gestor",
-         theory: "¡Fin del Módulo 1! Has aprendido cómo navegar alrededor del entorno.\n1. `show dbs` te permite ver qué bases existen.\n2. `use baseDatos` crea/te cambia a esa base.\n3. `db.createCollection("tabla")` te asegura la existencia física de un contenedor.\n4. `show collections` visualiza lo que tienes.",
+         theory: "¡Fin del Módulo 1! Has aprendido cómo navegar alrededor del entorno.\n1. `show dbs` te permite ver qué bases existen.\n2. `use baseDatos` crea/te cambia a esa base.\n3. `db.createCollection('tabla')` te asegura la existencia física de un contenedor.\n4. `show collections` visualiza lo que tienes.",
          objective: "Demuestra lo aprendido: Crea una base de datos totalmente nueva llamada 'ventas' (usa comando use) y luego crea en ella una colección llamada 'ticket_2026' (db.createCollection).",
          isTest: true
       }
