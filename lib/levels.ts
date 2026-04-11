@@ -278,7 +278,7 @@ export const modules: Module[] = [
     lessons: [
       {
          id: "m9-boss",
-         title: "La Gran Ligas 🧠",
+         title: "Las Grandes Ligas",
          theory: "Ahora todo dependerá de ti. Ya no hay más tutoriales escritos estáticos, lo que vas a afrontar ahora son problemas de la vida real inyectables y asíncronos generados por nuestra IA de forma improvisada.\n\nEl sistema te pedirá manejar empresas distintas, solucionar bugs, e implementar CRUD libremente.",
          objective: "No hay objetivo estático definido. Todo se compila al vuelo, prepárate para los golpes de tu CEO virtual.",
          isDynamicAi: true

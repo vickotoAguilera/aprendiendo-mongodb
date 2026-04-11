@@ -7,17 +7,29 @@ import { motion, AnimatePresence } from "framer-motion";
 import { modules, Lesson, Module } from "@/lib/levels";
 
 export default function Home() {
+  // Indice del modulo actualmente seleccionado en la barra lateral
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
+  
+  // Indice de la leccion dentro del modulo seleccionado
   const [activeLessonIndex, setActiveLessonIndex] = useState(0);
+  
+  // Estado local para almacenar la baso de datos actual (e.g. 'empresa') parseado desde la terminal nativa
   const [state, setState] = useState<{ activeDb: string } | null>(null);
+  
+  // Flag visual para mostrar la animacion de 'cargando' mientras esperamos a la Inteligencia Artificial (Groq)
   const [isLoadingAi, setIsLoadingAi] = useState(false);
+  
+  // Flag para detectar si se esta generando un escenario dinamico de CEO (modulo 9)
   const [isGeneratingCase, setIsGeneratingCase] = useState(false);
+  
+  // Aca se almacena la respuesta generada al vuelo por la IA de Groq para el modulo 9
   const [aiScenario, setAiScenario] = useState<{ theory: string, objective: string } | null>(null);
 
+  // Variables directas extraidas del temario (levels.ts) para facilitar su acceso localmente
   const currentModule = modules[activeModuleIndex];
   const currentLesson = currentModule.lessons[activeLessonIndex];
 
-  // Fetch local DB state initially
+  // Funcion asincrona para obtener en que base de datos se encuentra el usuario actualmente (Ej: de 'test' a 'empresa')
   const fetchData = async () => {
     try {
       const res = await fetch("/api/terminal");
@@ -28,9 +40,10 @@ export default function Home() {
     }
   };
 
+  // Al arrancar la aplicacion (on mount), se obtiene el nombre de la BD actual y se da la bienvenida
   useEffect(() => {
     fetchData();
-    // Dispatch initial greeting
+    // Dispatch un evento personalizado para que el componente 'Terminal.tsx' capture este mensaje e inicie
     setTimeout(() => {
        const event = new CustomEvent("addTerminalHint", { 
            detail: "¡Hola! Soy tu tutor Senior especializado en MongoDB. Prepárate para manejar flujos de trabajo reales.\n\nPara empezar, fíjate en el Módulo actual en la barra lateral y lee tu primer Objetivo. Escribe tus comandos en la consola, y cuando estés listo presiona 'Verificar con IA'." 
@@ -39,8 +52,9 @@ export default function Home() {
     }, 1000);
   }, []);
 
+  // Funcion para validar el progreso. Toma todo lo escrito en 'Terminal.tsx' como argumento
   const handleVerify = async (logHistory: string) => {
-      fetchData(); // Trigger activeDb update if switched
+      fetchData(); // Refresca en vivo la Database activa
       setIsLoadingAi(true);
       
       try {
@@ -58,21 +72,24 @@ export default function Home() {
          if (data.error) {
              const event = new CustomEvent("addTerminalHint", { detail: "Error del Servidor: " + data.error });
              window.dispatchEvent(event);
-         } else if (!data.isSuccess) {
-             // Ai is giving a hint
+         // Si la IA determino que pasaste el reto (advance: true)
+         if (!data.isSuccess) {
+             // La IA detecto fallos, lanza el mensaje de error o las pistas en forma amarilla en la consola
              const event = new CustomEvent("addTerminalHint", { detail: data.message });
              window.dispatchEvent(event);
          } else {
-             // AI congratulates and moves to next lesson
+             // ¡Exito! La IA da el veredicto positivo
              const event = new CustomEvent("addTerminalHint", { detail: data.message });
              window.dispatchEvent(event);
 
+             // Si la IA autorizo avanzar, esperamos segundo y medio y luego cambiamos de leccion o de modulo segun corresponda
              if (data.advance) {
                  setTimeout(() => {
-                    // Navigate to next lesson or module
                     if (activeLessonIndex + 1 < currentModule.lessons.length) {
+                        // Avanzar a la proxima leccion dentro del mismo modulo
                         setActiveLessonIndex(activeLessonIndex + 1);
                     } else if (activeModuleIndex + 1 < modules.length) {
+                        // Pasar al modulo siguiente directamente (Completaste el bloque)
                         setActiveModuleIndex(activeModuleIndex + 1);
                         setActiveLessonIndex(0);
                     }
@@ -87,19 +104,28 @@ export default function Home() {
       setIsLoadingAi(false);
   }
 
+  // Funcion ejecutada por el boton rojo de abajo a la izquierda para borrar la BD
   const handleResetCourse = async () => {
-    if (confirm(`🚨 ¿Seguro que deseas reiniciar el entorno? Esto borrará toda tu base de datos actual ('${state?.activeDb || 'empresa'}') y te devolverá al inicio del curso.`)) {
+    // Retira el emoji de la alerta 
+    if (confirm(`ATENCION. ¿Seguro que deseas reiniciar el entorno? Esto borrará toda tu base de datos actual ('${state?.activeDb || 'empresa'}') y te devolverá al inicio del curso.`)) {
       try {
+        // Enviar silenciosamente el comando destructivo a nuestra terminal nativa local
         await fetch('/api/terminal', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ command: 'db.dropDatabase()' })
         });
+        
+        // Regresa la interfaz al estado Base (modulo 1 leccion 1)
         setActiveModuleIndex(0);
         setActiveLessonIndex(0);
         setAiScenario(null);
+        
+        // Emite un pulso global. Terminal.tsx lo escuchara y se auto-vaciaran los logs en pantalla
         window.dispatchEvent(new CustomEvent('clearTerminalLogs'));
-        fetchData();
+        fetchData(); // Refresca para que vuelva a mostrar BD local como test
+        
+        // Notifica el exito
         setTimeout(() => {
           window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "El entorno ha sido eliminado y reseteado. ¡Empecemos de nuevo!" }));
         }, 500);
@@ -109,6 +135,7 @@ export default function Home() {
     }
   };
 
+  // Llama al servidor Groq para inventar un problema en el Acto. Boton del modulo 9.
   const generateAICase = async () => {
      setIsGeneratingCase(true);
      try {
@@ -116,7 +143,8 @@ export default function Home() {
          const data = await res.json();
          if (data.theory && data.objective) {
              setAiScenario(data);
-             window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "💼 Nuevo caso laboral asignado por el CEO. Lee las instrucciones en el panel." }));
+             // Removido emoji del panel del CEO
+             window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "NUEVA ALERTA: Nuevo caso laboral asignado por el CEO. Lee las instrucciones en el panel." }));
          } else if (data.error) {
              window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "Error del Servidor: " + data.error }));
          }
@@ -126,11 +154,13 @@ export default function Home() {
      setIsGeneratingCase(false);
   };
 
+  // Envia una consulta del boton ? Preguntar al tutor.
   const askHelp = async () => {
       const question = window.prompt("¿Qué comando o concepto olvidaste? La IA te responderá rápido y te dará un ejemplo de sintaxis.");
       if (!question) return;
 
-      window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "🔎 Consultando tus dudas con el Tutor..." }));
+      // Removido emoji de Lupa
+      window.dispatchEvent(new CustomEvent("addTerminalHint", { detail: "Consultando tus dudas con el Tutor en la Nube..." }));
       try {
           const res = await fetch("/api/ai/ask-help", {
               method: "POST",
@@ -256,7 +286,7 @@ export default function Home() {
                                   disabled={isGeneratingCase}
                                   className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-400 hover:from-emerald-500 hover:to-emerald-300 text-white font-bold tracking-wider uppercase text-sm shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                                 >
-                                  {isGeneratingCase ? 'Contactando al Servidor...' : '🤖 Requerir Tarea Empresarial'}
+                                  {isGeneratingCase ? 'Contactando al Servidor...' : 'REQUERIR TAREA MENTAL'}
                                 </button>
                              </div>
                           ) : (

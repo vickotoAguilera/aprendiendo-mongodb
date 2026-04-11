@@ -15,29 +15,41 @@ interface TerminalProps {
 }
 
 export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
+  // 'history' guarda los comandos y salidas que se ven en la pantalla principal (la consola grande azul)
   const [history, setHistory] = useState<TerminalEntry[]>([]);
+  
+  // 'logs' guarda PERSISTENTEMENTE los comandos ejecutados en el servidor real. ¡Esto es lo que lee la IA!
   const [logs, setLogs] = useState<TerminalEntry[]>([]);
+  
+  // 'input' controla el texto que el usuario va escribiendo en la barra de comandos
   const [input, setInput] = useState('');
+  
+  // Referencias para hacer auto-scroll hacia abajo cuando la consola se llena de texto
   const endRef = useRef<HTMLDivElement>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
+  // Esta funcion atrapa el momento en que el usuario oprime Enter o el boton de enviar
   const executeCommand = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoadingAi) return;
 
     const currentCmd = input.trim();
-    setInput('');
+    setInput(''); // Limpia la barra de texto instantaneamente
 
+    // Sistema de limpieza basico: Si el usuario escribe cls o clear, vaciamos la 'historia' visual
     if (currentCmd.toLowerCase() === 'cls' || currentCmd.toLowerCase() === 'clear') {
        setHistory([]);
-       setLogs(prev => [...prev, { command: currentCmd, output: "Screen cleared." }]);
+       // Pero dejamos un registro en 'logs' para no perder el tracking real
+       setLogs(prev => [...prev, { command: currentCmd, output: "Consola limpiada." }]);
        return;
     }
 
+    // Colocamos el comando en pantalla con output "..." mientras esperamos que Mongo responda
     setHistory((prev) => [...prev, { command: currentCmd, output: "..." }]);
     setLogs((prev) => [...prev, { command: currentCmd, output: "..." }]);
 
     try {
+      // Aqui ocurre la MAGIA REAL: enviamos el texto a nuestro servidor backend (route.ts)
       const res = await fetch('/api/terminal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,12 +57,13 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
       });
       const data = await res.json();
 
-      setHistory((prev) => {
+      // Cuando el backend responde, actualizamos el ultimo elemento de la lista para quitar los "..."
         const newHist = [...prev];
         newHist[newHist.length - 1] = { command: currentCmd, output: data.output };
         return newHist;
       });
       
+      // Actualizamos tambien los logs persistentes
       setLogs((prev) => {
         const newLogs = [...prev];
         if (newLogs.length > 0) {
@@ -60,12 +73,14 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
       });
 
     } catch (err) {
-      const errOut = "Network Error: Could not connect to local db emulator.";
+      // Manejo estricto si el servidor apago el mongosh o no hay red
+      const errOut = "Error de Red: No se pudo conectar a la base de datos local.";
       setHistory(prev => { const n = [...prev]; n[n.length - 1] = { command: currentCmd, output: errOut }; return n; });
       setLogs(prev => { const n = [...prev]; n[n.length - 1] = { command: currentCmd, output: errOut }; return n; });
     }
   };
 
+  // Efectos que obligan a la pagina a bajar (scroll) cada que entra un texto nuevo
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history]);
@@ -74,10 +89,13 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
     logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [logs]);
 
+  // Efecto montador de eventos: Esto es una antena receptora que escucha eventos desde page.tsx
   useEffect(() => {
+    // Si page.tsx dispara "addTerminalHint" (ej: mensaje del Tutor), lo inyectamos aqui a la fuerza
     const handleAddHint = (e: CustomEvent) => {
        setHistory(prev => [...prev, { command: "— [AI TUTOR] —", output: e.detail }]);
     };
+    // Si page.tsx dispara "clearTerminalLogs", vaciamos la memoria absoluta (sucede al reiniciar el curso)
     const handleClearLogs = () => {
        setHistory([]);
        setLogs([]);
@@ -85,16 +103,17 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
     window.addEventListener("addTerminalHint", handleAddHint as EventListener);
     window.addEventListener("clearTerminalLogs", handleClearLogs as EventListener);
     
+    // Al desmontar, desconectamos la antena para no gastar memoria
     return () => {
        window.removeEventListener("addTerminalHint", handleAddHint as EventListener);
        window.removeEventListener("clearTerminalLogs", handleClearLogs as EventListener);
     };
   }, []);
 
+  // Esta funcion serializa (convierte a texto plano gigante) todos tus logs para mandarlos al Bot Evaluador de Groq
   const handleVerify = () => {
-     // Serialize logs to send to AI
      const logString = logs.map(l => `> ${l.command}\n${l.output}`).join('\n\n');
-     onVerify(logString);
+     onVerify(logString); // Enviamos los logs a la pagina padre page.tsx
   };
 
   return (
