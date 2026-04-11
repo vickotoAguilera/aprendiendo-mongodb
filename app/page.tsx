@@ -72,8 +72,7 @@ export default function Home() {
          if (data.error) {
              const event = new CustomEvent("addTerminalHint", { detail: "Error del Servidor: " + data.error });
              window.dispatchEvent(event);
-         // Si la IA determino que pasaste el reto (advance: true)
-         if (!data.isSuccess) {
+         } else if (!data.isSuccess) {
              // La IA detecto fallos, lanza el mensaje de error o las pistas en forma amarilla en la consola
              const event = new CustomEvent("addTerminalHint", { detail: data.message });
              window.dispatchEvent(event);

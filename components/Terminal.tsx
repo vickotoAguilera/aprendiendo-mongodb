@@ -58,6 +58,7 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
       const data = await res.json();
 
       // Cuando el backend responde, actualizamos el ultimo elemento de la lista para quitar los "..."
+      setHistory((prev) => {
         const newHist = [...prev];
         newHist[newHist.length - 1] = { command: currentCmd, output: data.output };
         return newHist;
