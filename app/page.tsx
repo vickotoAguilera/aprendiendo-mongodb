@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Terminal } from "@/components/Terminal";
-import { Database, FolderCheck, Cpu, BrainCircuit, BookOpen, ChevronRight, RotateCcw, HelpCircle } from "lucide-react";
+import { Database, FolderCheck, Cpu, BrainCircuit, BookOpen, ChevronRight, RotateCcw, HelpCircle, Github } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { modules, Lesson, Module } from "@/lib/levels";
 
@@ -221,6 +221,14 @@ export default function Home() {
             <span className="px-4 py-2 bg-fuchsia-900/30 text-fuchsia-200 rounded-full text-xs border border-fuchsia-500/30 font-semibold flex items-center gap-2">
                <BrainCircuit size={14} /> Tutor Groq Activo
             </span>
+            <a 
+              href="https://github.com/vickotoAguilera/aprendiendo-mongodb" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="px-4 py-2 bg-gray-900/40 text-gray-300 hover:bg-slate-800 hover:text-white transition-all rounded-full text-xs border border-gray-700/50 font-semibold flex items-center gap-2 shadow-inner group"
+            >
+               <Github size={14} className="group-hover:text-white" /> Repositorio
+            </a>
           </div>
         </header>
 
