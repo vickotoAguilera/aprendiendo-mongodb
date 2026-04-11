@@ -201,7 +201,10 @@ export default function Home() {
         <header className="flex items-center justify-between border-b border-gray-800 p-4 px-8 bg-black/40 backdrop-blur-md z-10">
           <div className="flex items-center gap-3">
             <Database className="w-8 h-8 text-emerald-500" />
-            <h1 className="text-2xl font-bold tracking-tight text-white">Mongo<span className="text-emerald-500">Learn</span> <span className="text-fuchsia-500">AI</span></h1>
+            <div className="flex flex-col">
+               <h1 className="text-2xl font-bold tracking-tight text-white leading-none">Mongo<span className="text-emerald-500">Learn</span> <span className="text-fuchsia-500">AI</span></h1>
+               <span className="text-[10px] text-gray-400/60 font-semibold tracking-widest mt-1 uppercase">by vickoto de victechweb</span>
+            </div>
           </div>
           <div className="flex gap-4 items-center">
             <span className="px-4 py-2 bg-gray-900 rounded-full text-xs border border-gray-800 shadow-inner flex items-center gap-2">
