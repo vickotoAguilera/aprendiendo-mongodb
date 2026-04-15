@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import Groq from 'groq-sdk'; // El SDK (Software Development Kit) oficial de Groq para Node.js
+import Groq from 'groq-sdk'; // Aquí importé el SDK oficial de Groq para poder conectar con Llama 3
 
-// Inicializa el cliente conectandose con la llave segura alojada en .env.local
+// Inicializo el cliente usando la variable de entorno para no exponer mi API Key
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// El 'System Prompt' es la instruccion raiz o personalidad base que acata Llama 3.
+// Este es el 'System Prompt', básicamente el cerebro de mi configuración.
+// Acá le doy la personalidad estricta de "Tutor Senior de MongoDB" para que no se salga de su papel.
 const SYSTEM_PROMPT = `
 Eres un Experto Tutor de Bases de Datos NoSQL (MongoDB), reclutador y mentor senior.
 Tu objetivo es guiar a un estudiante en su aprendizaje de MongoDB utilizando hilos de trabajo reales basados en el temario proporcionado.
@@ -36,13 +37,13 @@ IMPORTANTE:
 - Si los logs están vacíos o no contienen comandos relevantes, indica que el usuario no ha ejecutado ningún comando todavía.
 `;
 
-// Esta API es llamada usando fetch('/api/ai/evaluate', { method: 'POST' ... }) desde 'page.tsx' al presionar el boton Verificar
+// Mi ruta principal de evaluación, acá llega todo lo que el alumno presiona en "Verificar"
 export async function POST(req: Request) {
   try {
-    // 1. Extraer los datos enviados en el Body (cuerpo) de la peticion del frontend
+    // 1. Extraigo los datos que mandé desde mi frontend (el módulo, lección e historial de la terminal)
     const { currentModule, currentLesson, logHistory } = await req.json();
 
-    // Validar que haya logs para evaluar
+    // Hice esta validación rápida para no quemar tokens a lo tonto si la consola está vacía
     if (!logHistory || logHistory.trim().length === 0) {
       return NextResponse.json({
         isSuccess: false,
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // 2. Construir el 'User Prompt' o el contexto final inyectando las variables reales dentro del texto
+    // 2. Construyo el contexto final inyectando las variables del curso antes de ir a Groq
     const userPromptContext = `
 MODULO ACTUAL: ${currentModule?.title || "Desconocido"}
 LECCION ACTUAL: ${currentLesson?.title || "Desconocida"}
@@ -66,21 +67,22 @@ EVALUA: Cumplio el usuario exitosamente el Objetivo basandote en el historial de
 Responde obligatoriamente en JSON con isSuccess, message y advance.
     `;
 
-    // 3. Ejecutar la llamada asincrona a GroqCloud enviandole la personalidad y los datos armados
+    // 3. Llamada asíncrona a la nube de Groq
     const completion = await groq.chat.completions.create({
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPromptContext }
       ],
-      model: 'llama-3.3-70b-versatile', // Modelo rapido y poderoso
-      response_format: { type: "json_object" }, // FORZAMOS a que Groq responda solo en lenguaje maquina (JSON) y no un texto libre
-      temperature: 0.7, // Creatividad al 70%
+      model: 'llama-3.3-70b-versatile', // Elegí este modelo porque me rinde bastante bien y es veloz
+      response_format: { type: "json_object" }, // FORZO a que Groq responda solo en JSON, me evita muchos dolores de cabeza
+      temperature: 0.7, 
     });
 
-    // 4. Recepcion de respuesta. Si vino vacio por un crasheo ponemos un json en blanco
+    // 4. Recepción de respuesta segura
     const aiResponse = completion.choices[0]?.message?.content || "{}";
     
-    // 5. Convertir la respuesta string texto plano al formato Objeto Javascript real
+    // 5. Transformo el JSON string a un objeto usable. 
+    // Metí un try-catch por si la IA alucina y me devuelve HTML o basura
     let evaluatedJSON;
     try {
       evaluatedJSON = JSON.parse(aiResponse);

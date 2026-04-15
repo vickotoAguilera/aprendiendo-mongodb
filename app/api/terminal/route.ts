@@ -1,61 +1,60 @@
 import { NextResponse } from 'next/server';
 import { getSystemState, updateSystemState } from '@/lib/db';
-import { exec } from 'child_process'; // Librería nativa de Node para correr comandos directo en el Sistema Operativo (Windows CMD)
+import { exec } from 'child_process'; // Usé esta librería nativa de Node para poder correr comandos directo en mi CMD de Windows
 import util from 'util';
 
-// Promisificamos el comando de consola para poder usar await (esperar a que el PC termine de ejecutarlo)
+// Promisifico la ejecución para poder usar async/await y decirle a Node "espera a que MongoDB termine de procesar el comando"
 const execPromise = util.promisify(exec);
 
 export async function POST(req: Request) {
   try {
-    // 1. Recibir el comando escrito en el frontend (React/NextJS)
+    // 1. Recibo el comando que el alumno escribió en el frontend
     const { command } = await req.json();
     
-    // 2. Traer el estado pseudo-persistente (saber en qué base de datos estamos usando "use db")
+    // 2. Traigo mi estado local para recordar en qué base de datos está parado el usuario (el famoso "use db")
     const systemState = await getSystemState();
 
     let output = "";
     const cmdStr = command.trim();
 
-    // 3. Comandos ignorados: El limpiador de pantalla ya se maneja visualmente en el Frontend
+    // 3. Comandos interceptados: Si manda limpiar pantalla, le aviso al front sin tocar la BD real
     if (cmdStr.toLowerCase() === 'cls' || cmdStr.toLowerCase() === 'clear') {
       return NextResponse.json({ output: "", systemState });
     }
 
-    // 4. Comando 'use' artificial: Guardamos en un log temporal el cambio de DB (ej: 'use empresa')
+    // 4. Comando 'use' artificial: MongoDB Shell nativo no persiste el "use" entre llamadas aisladas,
+    // así que si el usuario escribe "use empresa", lo guardo en mi DB local para recordarlo en la siguiente petición.
     if (cmdStr.toLowerCase().startsWith('use ')) {
       const dbName = cmdStr.split(' ')[1];
-      // Guardamos la BD en memoria local de NextJS para no perderla en la siguiente peticion
       await updateSystemState({ activeDb: dbName });
       output = `switched to db ${dbName}`;
       return NextResponse.json({ output, systemState: await getSystemState() });
     }
 
-    // 5. El núcleo del sistema: Ejecutar el comando del alumno en la computadora real
+    // 5. El núcleo del sistema: Aquí es donde ejecuto el comando
     try {
-      // Connect specifically to the activeDb (Agregamos la Base al final de la ruta IP)
+      // Me conecto directo a la BD activa que tengo guardada en estado
       const activeDb = systemState.activeDb || "test";
       const connectionString = `mongodb://127.0.0.1:27017/${activeDb}`;
       
       const formattedCommand = cmdStr;
       
-      // Construccion del inyector:
-      // Ejecutamos en CMD: mongosh "mongodb://..." --quiet --eval "comando_del_alumno"
-      // El --eval hace que mongo se abra, ejecute codigo en V8 engine, y se cierre devolviendo texto plano sin UI.
+      // La jugada maestra: Abro mongosh, le paso el código JS por la bandera --eval,
+      // la shell lo ejecuta internamente en su motor V8, me escupe texto plano y se cierra sin abrir la interfaz de consola.
       const { stdout, stderr } = await execPromise(`mongosh "${connectionString}" --quiet --eval "${formattedCommand.replace(/"/g, '\\"')}"`);
       
       output = stdout || stderr;
       
-      // Cleanup extra newlines from output if any
+      // Limpio los saltos de línea basura que a veces deja la terminal
       output = output.trim();
       
     } catch (e: any) {
-      // Si el usuario metio un error de sintaxis como db.err() la shell explotará 
-      // y lo devolvemos como texto para que la IA lo regañe.
+      // Si el usuario metió un error de sintaxis nativo (ej: db.err()), la consola de Windows explota,
+      // así que lo atrapo aquí y se lo devuelvo como texto para que la IA lo vea y lo regañe.
       output = `Error ejecutando comando localmente:\n${e.stdout || e.message}`;
     }
 
-    // Devolver el String resultado para que lo randerize el componente Terminal.tsx
+    // Devuelvo todo al frontend para que Terminal.tsx lo dibuje en pantalla
     return NextResponse.json({
         output,
         systemState: await getSystemState(),

@@ -6,6 +6,8 @@ import { Database, FolderCheck, Cpu, BrainCircuit, BookOpen, ChevronRight, Rotat
 import { motion, AnimatePresence } from "framer-motion";
 import { modules } from "@/lib/levels";
 
+// Aquí definí el componente principal que maneja toda la vista de mi aplicación.
+// Básicamente, uso estados para controlar en qué módulo y lección va el estudiante.
 export default function HomeClient() {
   const [activeModuleIndex, setActiveModuleIndex] = useState(0);
   const [activeLessonIndex, setActiveLessonIndex] = useState(0);
@@ -18,7 +20,8 @@ export default function HomeClient() {
   const currentModule = modules[activeModuleIndex];
   const currentLesson = currentModule?.lessons[activeLessonIndex];
 
-  // Guardar progreso cada vez que cambia el módulo o la lección
+  // Implementé esta función para guardar el progreso del alumno en la DB local cada vez que avanza de lección.
+  // Así si recargan la página, no pierden donde iban.
   const saveProgress = useCallback(async (modIdx: number, lesIdx: number) => {
     try {
       await fetch("/api/terminal/progress", {
@@ -27,10 +30,11 @@ export default function HomeClient() {
         body: JSON.stringify({ moduleIndex: modIdx, lessonIndex: lesIdx }),
       });
     } catch (e) {
-      console.error("Error guardando progreso:", e);
+      console.error("Oops, error guardando progreso:", e);
     }
   }, []);
 
+  // Hice esta función para traer la intro y saber qué DB está activa
   const fetchData = async () => {
     try {
       const res = await fetch("/api/terminal");
@@ -84,11 +88,14 @@ export default function HomeClient() {
   const displayTheory = currentLesson?.isDynamicAi && aiScenario ? aiScenario.theory : currentLesson?.theory;
   const displayObjective = currentLesson?.isDynamicAi && aiScenario ? aiScenario.objective : currentLesson?.objective;
 
+  // Esta parte es clave: Aquí manejo la evaluación con la IA. 
+  // Tomo lo que el estudiante escribió y se lo mando a Groq para que me diga si lo hizo bien o no.
   const handleVerify = async (logHistory: string) => {
     fetchData();
     setIsLoadingAi(true);
 
     try {
+      // Hago la consulta POST hacia mi propio backend de evaluación
       const res = await fetch("/api/ai/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -165,6 +172,7 @@ export default function HomeClient() {
     }
   };
 
+  // Con esto el CEO le asigna un caso práctico inventado al azar
   const generateAICase = async () => {
     setIsGeneratingCase(true);
     try {
