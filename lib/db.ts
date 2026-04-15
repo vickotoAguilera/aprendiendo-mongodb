@@ -5,6 +5,21 @@ import path from 'path';
 const DB_ROOT = path.join(process.cwd(), 'local_db');
 const SYSTEM_FILE = path.join(DB_ROOT, 'system.json');
 
+// Tipo del estado del sistema con progreso del curso
+interface SystemState {
+  activeDb: string;
+  level: number;
+  moduleIndex: number;
+  lessonIndex: number;
+}
+
+const DEFAULT_STATE: SystemState = {
+  activeDb: 'test',
+  level: 1,
+  moduleIndex: 0,
+  lessonIndex: 0,
+};
+
 // Ensure the local_db directory and system file exist
 export async function initDb() {
   try {
@@ -13,22 +28,24 @@ export async function initDb() {
       await fs.access(SYSTEM_FILE);
     } catch {
       // If it doesn't exist, create it with default state
-      await fs.writeFile(SYSTEM_FILE, JSON.stringify({ activeDb: 'test', level: 1 }, null, 2), 'utf-8');
+      await fs.writeFile(SYSTEM_FILE, JSON.stringify(DEFAULT_STATE, null, 2), 'utf-8');
     }
   } catch (error) {
     console.error("Error initializing DB:", error);
   }
 }
 
-// Get the current system state (active DB and current learning level)
-export async function getSystemState() {
+// Get the current system state (active DB, learning level, and course progress)
+export async function getSystemState(): Promise<SystemState> {
   await initDb();
   const data = await fs.readFile(SYSTEM_FILE, 'utf-8');
-  return JSON.parse(data);
+  const parsed = JSON.parse(data);
+  // Merge with defaults to ensure new fields exist on old system.json files
+  return { ...DEFAULT_STATE, ...parsed };
 }
 
 // Update system state
-export async function updateSystemState(newState: Partial<{ activeDb: string, level: number }>) {
+export async function updateSystemState(newState: Partial<SystemState>) {
   const current = await getSystemState();
   const updated = { ...current, ...newState };
   await fs.writeFile(SYSTEM_FILE, JSON.stringify(updated, null, 2), 'utf-8');

@@ -30,6 +30,10 @@ Se te pasara el contexto del Modulo y Leccion Actual (incluyendo el Objetivo que
    - "isSuccess": true
    - "advance": true
    - "message": "Exito! [Opcional: explicale un breve caso de por que esto sirve en trabajos reales como bancos o clinicas]. Continuemos!"
+
+IMPORTANTE: 
+- Tu respuesta DEBE ser SOLAMENTE el objeto JSON, sin texto adicional antes o después.
+- Si los logs están vacíos o no contienen comandos relevantes, indica que el usuario no ha ejecutado ningún comando todavía.
 `;
 
 // Esta API es llamada usando fetch('/api/ai/evaluate', { method: 'POST' ... }) desde 'page.tsx' al presionar el boton Verificar
@@ -37,6 +41,15 @@ export async function POST(req: Request) {
   try {
     // 1. Extraer los datos enviados en el Body (cuerpo) de la peticion del frontend
     const { currentModule, currentLesson, logHistory } = await req.json();
+
+    // Validar que haya logs para evaluar
+    if (!logHistory || logHistory.trim().length === 0) {
+      return NextResponse.json({
+        isSuccess: false,
+        advance: false,
+        message: "No has ejecutado ningún comando todavía. Escribe tu comando en la consola y luego presiona 'Verificar con IA'."
+      });
+    }
 
     // 2. Construir el 'User Prompt' o el contexto final inyectando las variables reales dentro del texto
     const userPromptContext = `
@@ -68,10 +81,35 @@ Responde obligatoriamente en JSON con isSuccess, message y advance.
     const aiResponse = completion.choices[0]?.message?.content || "{}";
     
     // 5. Convertir la respuesta string texto plano al formato Objeto Javascript real
-    const evaluatedJSON = JSON.parse(aiResponse);
+    let evaluatedJSON;
+    try {
+      evaluatedJSON = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.error("Error parseando respuesta IA:", aiResponse);
+      // Si el JSON viene malformado, intentamos extraer un mensaje útil
+      return NextResponse.json({
+        isSuccess: false,
+        advance: false,
+        message: "El Tutor IA tuvo un problema al formular su respuesta. Intenta verificar de nuevo."
+      });
+    }
 
-    // 6. Devolverle la informacion procesada a la pantalla principal visual de React
-    return NextResponse.json(evaluatedJSON);
+    // 6. Validar que la respuesta tenga la estructura esperada
+    if (typeof evaluatedJSON.isSuccess !== "boolean") {
+      // La IA respondió JSON pero sin la estructura correcta
+      return NextResponse.json({
+        isSuccess: false,
+        advance: false,
+        message: evaluatedJSON.message || evaluatedJSON.feedback || "El Tutor no pudo evaluar correctamente. Intenta de nuevo."
+      });
+    }
+
+    // 7. Devolverle la informacion procesada a la pantalla principal visual de React
+    return NextResponse.json({
+      isSuccess: evaluatedJSON.isSuccess,
+      advance: evaluatedJSON.advance ?? evaluatedJSON.isSuccess,
+      message: evaluatedJSON.message || (evaluatedJSON.isSuccess ? "¡Objetivo cumplido!" : "Revisa tu comando e intenta de nuevo.")
+    });
 
   } catch (err: any) {
     console.error("Groq API Error:", err);

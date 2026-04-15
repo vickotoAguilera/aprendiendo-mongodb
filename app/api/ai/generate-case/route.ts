@@ -19,6 +19,8 @@ INSTRUCCIONES DE GENERACIÓN:
 Ejemplo: "Soy el CTO de la nave espacial X. Se borró la base de datos de tripulantes de oxígeno."
 
 2. "objective": Debe tener entre 1 y 3 instrucciones escalonadas sobre colecciones y variables inventadas, que obliguen a usar una mezcla de inserciones, operaciones de arreglos, deletes o agregaciones lógicas que pueda hacer usando la consola. Asegúrate de pedir MÁXIMO 3 comandos a escribir para no abrumar tanto, pero que requieran aplicar lo enseñado en MongoDB. Detalla exacto qué campos usar. 
+
+IMPORTANTE: Tu respuesta DEBE ser SOLAMENTE el objeto JSON, sin texto adicional.
 `;
 
 export async function GET() {
@@ -34,12 +36,28 @@ export async function GET() {
     });
 
     const aiResponse = completion.choices[0]?.message?.content || "{}";
-    const evaluatedJSON = JSON.parse(aiResponse);
+    
+    let evaluatedJSON;
+    try {
+      evaluatedJSON = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.error("Error parseando caso generado:", aiResponse);
+      return NextResponse.json({ 
+        error: "La IA generó una respuesta malformada. Intenta generar otro caso." 
+      }, { status: 500 });
+    }
+
+    // Validar que tenga theory y objective
+    if (!evaluatedJSON.theory || !evaluatedJSON.objective) {
+      return NextResponse.json({
+        error: "La IA no generó un caso completo. Intenta de nuevo."
+      }, { status: 500 });
+    }
 
     return NextResponse.json(evaluatedJSON);
 
   } catch (err: any) {
     console.error("Groq API Error in case generation:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: "Error contactando al CEO IA: " + err.message }, { status: 500 });
   }
 }
