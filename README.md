@@ -32,6 +32,8 @@ Node.js es el motor que ejecuta toda la aplicación web.
 2. Descarga la versión **LTS** (Long Term Support) — actualmente v22.x
 3. Ejecuta el instalador `.msi` y sigue los pasos (deja todo por defecto)
 4. **Importante**: En el paso que dice *"Automatically install necessary tools"*, marca la casilla ✅
+   - *Nota: Al finalizar la instalación, se abrirá una ventana azul de PowerShell instalando herramientas adicionales (Python, Visual Studio Build Tools). Este proceso **puede tardar más de 20-30 minutos**. ¡Sé paciente y no la cierres!*
+   - *Si cerraste la ventana por accidente o se quedó pegada:* Puedes reanudarla buscando **"Install Additional Tools for Node.js"** en tu menú de inicio de Windows. No es necesario desinstalar ni reiniciar el PC.
 5. Verifica que quedó bien instalado abriendo una terminal (CMD o PowerShell) y escribiendo:
    ```
    node -v
@@ -114,6 +116,8 @@ Node.js is the engine that runs the entire web application.
 2. Download the **LTS** version (Long Term Support) — currently v22.x
 3. Run the `.msi` installer and follow the steps (leave defaults)
 4. **Important**: On the step that says *"Automatically install necessary tools"*, check the box ✅
+   - *Note: After installation, a blue PowerShell window will appear installing additional tools (Python, Visual Studio Build Tools). This process **can take 20-30+ minutes**. Be patient and do not close it!*
+   - *If you accidentally closed it or it got stuck:* You can resume it by searching for **"Install Additional Tools for Node.js"** in your Windows Start menu. You do not need to uninstall Node or restart your PC.
 5. Verify it's installed by opening a terminal and typing:
    ```
    node -v
