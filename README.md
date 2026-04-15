@@ -6,62 +6,194 @@ Bienvenido a la plataforma de aprendizaje de MongoDB más completa, interactiva 
 
 ---
 
-## 🇺🇸 English Guide
+## 📋 Stack Tecnológico y Versiones
 
-### 1. Requirements (Crucial step)
-This project **does not simulate** a database. It executes commands securely over a **REAL, NATIVE** MongoDB installation running on your own computer.
+| Tecnología | Versión | Enlace de descarga |
+|---|---|---|
+| **Node.js** | v22.x (LTS recomendado) | [https://nodejs.org/](https://nodejs.org/) |
+| **npm** | v10.x (incluido con Node.js) | Viene con Node.js |
+| **Next.js** | 16.2.1 | Instalado con `npm install` |
+| **React** | 19.x | Instalado con `npm install` |
+| **MongoDB Server** | v4.4+ hasta v8.x | [Descarga Community Server](https://www.mongodb.com/try/download/community) |
+| **Mongosh (Shell)** | v2.x | [Descarga MongoDB Shell](https://www.mongodb.com/try/download/shell) |
+| **Groq SDK (IA)** | v1.x | Instalado con `npm install` |
 
-*   **MongoDB Server**: You MUST have MongoDB Community Server installed and running locally.
-    *   *Always try to install the LATEST version available (v7 or v8).*
-    *   *Fix for Older CPUs*: If your computer is older and crashes or won't install the latest version (due to missing AVX CPU instructions), download **MongoDB v4.4.30** from the [MongoDB Community Server Archive](https://www.mongodb.com/try/download/community). It works perfectly for this project.
-*   **Mongosh CLI**: You must download the separate shell client: [MongoDB Shell Download](https://www.mongodb.com/try/download/shell).
-    *   Extract the `.zip` file (e.g., to `C:\mongosh`).
-    *   You **MUST** add `C:\mongosh\bin` to your Windows Environment Variables (`PATH`). The project executes `mongosh` via pure Node.js spawn processes, so Windows needs to recognize the command globally.
-
-### 2. Setup
-1. Clone this repository to your computer.
-2. Open terminal inside the project folder.
-3. Run `npm install` to install dependencies.
-4. Run `npm run dev` or the new `iniciar.bat`.
-5. The platform will automatically connect to your local `mongodb://127.0.0.1:27017` via CLI.
-
-### 3. AI Groq Integration
-To unlock the intelligent tutor that reads your terminal logs and grades your commands:
-1. Go to [Groq Console](https://console.groq.com/keys) and sign up for a free account.
-2. Generate an API Key.
-3. Create a `.env.local` file in the root folder of this project.
-4. Add the line: `GROQ_API_KEY=your_key_here`
-5. Restart the server.
+> **Nota**: Este proyecto fue desarrollado y probado con **Node.js v22.20.0**, **MongoDB v8.2.6** y **mongosh v2.8.2** en Windows 10/11.
 
 ---
 
 ## 🇪🇸 Guía en Español
 
-### 1. Requisitos (Paso Crucial)
-Este proyecto **no simula** una base de datos de juguete. Ejecuta comandos de manera real sobre un servidor **ATIVO** de MongoDB que corre en tu propia computadora.
+### 1. Instalar Node.js (Obligatorio)
 
-*   **Servidor MongoDB**: DEBES tener MongoDB Community Server instalado en tu PC de forma local.
-    *   *Se recomienda descargar siempre la ÚLTIMA versión disponible (v7 o v8) para computadoras modernas normales.*
-    *   *Parche para PCs de bajos recursos:* Si tu PC es algo antigua y la instalación de las versiones nuevas arroja error o crashea inesperadamente (ya que las versiones modernas exigen procesadores con instrucciones AVX), no te preocupes. Baja con confianza la versión **MongoDB v4.4.30** desde el [Archivo de MongoDB Server](https://www.mongodb.com/try/download/community). Funciona estupendo e idéntico para este proyecto.
-*   **Mongosh CLI**: Independientemente de tu versión, debes bajar la nueva consola separada: [Descarga de MongoDB Shell](https://www.mongodb.com/try/download/shell).
-    *   Extrae el archivo `.zip` en una ruta sencilla, por ejemplo `C:\mongosh`.
-    *   **DEBES** agregar la ruta `C:\mongosh\bin` a las Variables de Entorno de Windows (`PATH`). El proyecto ejecutará `mongosh` puramente detrás de escena, así que Windows necesita reconocer esa palabra por consola globalmente.
+Node.js es el motor que ejecuta toda la aplicación web.
 
-### 2. Instalación
-1. Clona este repositorio en tu ordenador usando Git.
-2. Abre la consola en la raíz de la carpeta.
-3. Ejecuta `npm install` para instalar todas las dependencias.
-4. Ejecuta `iniciar.bat` o en su defecto `npm run dev`.
-5. La plataforma automáticamente mandará un "ping" a tu base local al puerto 27017.
+1. Ve a **[https://nodejs.org/](https://nodejs.org/)**
+2. Descarga la versión **LTS** (Long Term Support) — actualmente v22.x
+3. Ejecuta el instalador `.msi` y sigue los pasos (deja todo por defecto)
+4. **Importante**: En el paso que dice *"Automatically install necessary tools"*, marca la casilla ✅
+5. Verifica que quedó bien instalado abriendo una terminal (CMD o PowerShell) y escribiendo:
+   ```
+   node -v
+   npm -v
+   ```
+   Deberías ver algo como `v22.20.0` y `10.9.3`
 
-### 3. Integración de la IA (Llama 3.3 by Groq)
-Para desbloquear al tutor que valida tu historial de comandos reales y te corrige o avanza de nivel:
-1. Dirígete a [Groq Console](https://console.groq.com/keys) y regístrate para obtener una cuenta gratis.
-2. Haz clic en "Create API Key".
-3. Crea un archivo llamado `.env.local` en la carpeta principal del proyecto (la misma donde está el package.json).
-4. Escribe esta línea dentro: `GROQ_API_KEY=aca_tu_clave_super_secreta`
+### 2. Instalar MongoDB Server (Obligatorio)
+
+Este proyecto **no simula** una base de datos de juguete. Ejecuta comandos de manera real sobre un servidor **ACTIVO** de MongoDB que corre en tu propia computadora.
+
+1. Ve a **[Descarga MongoDB Community Server](https://www.mongodb.com/try/download/community)**
+2. Selecciona tu sistema operativo y descarga el instalador `.msi`
+3. *Se recomienda descargar siempre la ÚLTIMA versión disponible (v7 o v8) para computadoras modernas normales.*
+4. Durante la instalación, marca la opción **"Install MongoDB as a Service"** para que arranque automáticamente
+5. **Parche para PCs de bajos recursos:** Si tu PC es algo antigua y la instalación de las versiones nuevas arroja error o crashea inesperadamente (ya que las versiones modernas exigen procesadores con instrucciones AVX), baja con confianza la versión **MongoDB v4.4.30** desde el [Archivo de MongoDB Server](https://www.mongodb.com/try/download/community). Funciona estupendo e idéntico para este proyecto.
+
+### 3. Instalar Mongosh CLI (Obligatorio)
+
+Independientemente de tu versión de MongoDB Server, debes bajar la nueva consola separada:
+
+1. Ve a **[Descarga de MongoDB Shell](https://www.mongodb.com/try/download/shell)**
+2. Descarga el archivo `.zip` para Windows
+3. Extrae el archivo en una ruta sencilla, por ejemplo `C:\mongosh`
+4. **DEBES** agregar la ruta `C:\mongosh\bin` a las Variables de Entorno de Windows (`PATH`):
+   - Busca "Variables de Entorno" en el menú inicio
+   - Edita la variable `Path` del usuario
+   - Agrega una nueva línea: `C:\mongosh\bin`
+   - Acepta y cierra todo
+5. Verifica que funcione abriendo una terminal nueva y escribiendo:
+   ```
+   mongosh --version
+   ```
+   Deberías ver algo como `2.8.2`
+
+### 4. Instalación del Proyecto
+
+```bash
+# 1. Clona el repositorio
+git clone https://github.com/vickotoAguilera/aprendiendo-mongodb.git
+
+# 2. Entra a la carpeta
+cd aprendiendo-mongodb
+
+# 3. Instala las dependencias
+npm install
+
+# 4. Inicia el servidor de desarrollo
+npm run dev
+```
+
+También puedes usar los scripts `.bat` incluidos:
+- `install.bat` — Instala las dependencias automáticamente
+- `iniciar.bat` — Arranca el servidor de desarrollo
+
+Una vez iniciado, abre tu navegador en **http://localhost:3000** 🚀
+
+### 5. Integración de la IA (Llama 3.3 by Groq)
+
+Para desbloquear al tutor inteligente que valida tu historial de comandos reales y te corrige o avanza de nivel:
+
+1. Dirígete a **[Groq Console](https://console.groq.com/keys)** y regístrate para obtener una cuenta gratis.
+2. Haz clic en **"Create API Key"**.
+3. Crea un archivo llamado `.env.local` en la carpeta principal del proyecto (la misma donde está el `package.json`).
+4. Escribe esta línea dentro:
+   ```
+   GROQ_API_KEY=aca_tu_clave_super_secreta
+   ```
 5. Reinicia el servidor.
 
 ---
 
-> Hecho con 💖 para los amantes de las Bases de Datos y el aprendizaje con IA.
+## 🇺🇸 English Guide
+
+### 1. Install Node.js (Required)
+
+Node.js is the engine that runs the entire web application.
+
+1. Go to **[https://nodejs.org/](https://nodejs.org/)**
+2. Download the **LTS** version (Long Term Support) — currently v22.x
+3. Run the `.msi` installer and follow the steps (leave defaults)
+4. **Important**: On the step that says *"Automatically install necessary tools"*, check the box ✅
+5. Verify it's installed by opening a terminal and typing:
+   ```
+   node -v
+   npm -v
+   ```
+   You should see something like `v22.20.0` and `10.9.3`
+
+### 2. Install MongoDB Server (Required)
+
+This project **does not simulate** a database. It executes commands securely over a **REAL, NATIVE** MongoDB installation running on your own computer.
+
+1. Go to **[MongoDB Community Server Download](https://www.mongodb.com/try/download/community)**
+2. Select your OS and download the `.msi` installer
+3. *Always try to install the LATEST version available (v7 or v8).*
+4. During installation, check **"Install MongoDB as a Service"** so it starts automatically
+5. *Fix for Older CPUs*: If your computer is older and crashes or won't install the latest version (due to missing AVX CPU instructions), download **MongoDB v4.4.30** from the [MongoDB Community Server Archive](https://www.mongodb.com/try/download/community). It works perfectly for this project.
+
+### 3. Install Mongosh CLI (Required)
+
+You must download the separate shell client regardless of your MongoDB Server version:
+
+1. Go to **[MongoDB Shell Download](https://www.mongodb.com/try/download/shell)**
+2. Download the `.zip` file for your OS
+3. Extract it to a simple path, e.g., `C:\mongosh`
+4. You **MUST** add `C:\mongosh\bin` to your Windows Environment Variables (`PATH`):
+   - Search "Environment Variables" in the Start menu
+   - Edit the `Path` variable
+   - Add a new line: `C:\mongosh\bin`
+   - Save and close
+5. Verify it works by opening a new terminal and typing:
+   ```
+   mongosh --version
+   ```
+
+### 4. Project Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/vickotoAguilera/aprendiendo-mongodb.git
+
+# 2. Enter the folder
+cd aprendiendo-mongodb
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the development server
+npm run dev
+```
+
+You can also use the included `.bat` scripts on Windows:
+- `install.bat` — Automatically installs dependencies
+- `iniciar.bat` — Starts the development server
+
+Once started, open your browser at **http://localhost:3000** 🚀
+
+### 5. AI Integration (Llama 3.3 by Groq)
+
+To unlock the intelligent tutor that reads your terminal logs and grades your commands:
+1. Go to **[Groq Console](https://console.groq.com/keys)** and sign up for a free account.
+2. Click **"Create API Key"**.
+3. Create a `.env.local` file in the root folder of this project (same folder as `package.json`).
+4. Add the line:
+   ```
+   GROQ_API_KEY=your_key_here
+   ```
+5. Restart the server.
+
+---
+
+## 🛠️ Solución de Problemas / Troubleshooting
+
+| Problema | Solución |
+|---|---|
+| `mongosh` no se reconoce como comando | Agrega `C:\mongosh\bin` a tu `PATH` y reinicia la terminal |
+| MongoDB no conecta en el puerto 27017 | Verifica que el servicio MongoDB esté corriendo: `net start MongoDB` |
+| Error con la IA / Groq | Revisa que tu `.env.local` tenga la clave correcta y reinicia `npm run dev` |
+| `node` no se reconoce | Reinstala Node.js desde [nodejs.org](https://nodejs.org/) |
+| Error de versión AVX | Instala MongoDB v4.4.30 en vez de la última versión |
+
+---
+
+> Hecho con 💖 por **vickoto de victechweb** para los amantes de las Bases de Datos y el aprendizaje con IA.
