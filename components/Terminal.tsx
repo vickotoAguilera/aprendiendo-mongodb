@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Send, CheckCircle2, TerminalSquare } from 'lucide-react';
+import { Send, CheckCircle2, TerminalSquare, Download } from 'lucide-react';
 
 interface TerminalEntry {
   command: string;
@@ -22,6 +22,7 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
   const [input, setInput] = useState('');
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [isExporting, setIsExporting] = useState(false);
   
   // Referencias para hacer auto-scroll hacia abajo cuando la consola se llena de texto
   const endRef = useRef<HTMLDivElement>(null);
@@ -117,6 +118,34 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
      onVerify(logString); // Enviamos los logs a la pagina padre page.tsx
   };
 
+  const handleExportSuccessLogs = async () => {
+    setIsExporting(true);
+    try {
+      const logString = logs.map(l => `> ${l.command}\n${l.output}`).join('\n\n');
+      const res = await fetch("/api/ai/format-logs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ logHistory: logString })
+      });
+      const data = await res.json();
+      
+      if (data.result) {
+        const blob = new Blob([data.result], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mongo_scripts_exitosos.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        alert("Error: " + (data.error || "La IA no devolvió registros válidos."));
+      }
+    } catch {
+      alert("Error de red al intentar descargar.");
+    }
+    setIsExporting(false);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -168,20 +197,26 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
         </div>
 
         <form onSubmit={executeCommand} className="flex relative items-center mt-2 bg-black/40 p-2 rounded-xl border border-indigo-500/20 shadow-inner">
-          <span className="text-fuchsia-500 absolute left-4 animate-pulse">&gt;</span>
-          <input 
-            type="text" 
+          <span className="text-fuchsia-500 absolute left-4 top-3 animate-pulse">&gt;</span>
+          <textarea 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+               if (e.key === 'Enter' && !e.shiftKey) {
+                 e.preventDefault();
+                 executeCommand(e as any);
+               } else {
+                 handleKeyDown(e as any);
+               }
+            }}
             disabled={isLoadingAi}
-            className="w-full bg-transparent border-none outline-none text-indigo-50 font-bold pl-8 pr-12 text-lg placeholder:text-indigo-900/50 disabled:opacity-50"
-            placeholder={isLoadingAi ? "Esperando a la IA..." : "Escribe un comando..."}
+            className="w-full bg-transparent border-none outline-none text-indigo-50 font-bold pl-8 pr-12 py-[8px] text-lg placeholder:text-indigo-900/50 disabled:opacity-50 resize-none min-h-[45px] hover:min-h-[100px] focus:min-h-[100px] transition-all custom-scrollbar"
+            placeholder={isLoadingAi ? "Esperando a la IA..." : "Escribe un comando... (Shift + Enter para nueva línea)"}
             autoFocus
             autoComplete="off"
             spellCheck="false"
           />
-          <button type="submit" disabled={isLoadingAi} className="absolute right-4 text-fuchsia-600 hover:text-fuchsia-300 transition-colors disabled:opacity-50">
+          <button type="submit" disabled={isLoadingAi} className="absolute right-4 bottom-3 text-fuchsia-600 hover:text-fuchsia-300 transition-colors disabled:opacity-50">
             <Send size={20} />
           </button>
         </form>
@@ -192,13 +227,22 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
          <div className="flex items-center text-gray-400 text-sm font-mono gap-2">
             <TerminalSquare size={16}/> Logs de Ejecución {logs.length > 0 && `(${logs.length})`}
          </div>
-         <button 
-           onClick={handleVerify} 
-           disabled={isLoadingAi}
-           className="flex items-center gap-2 px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all disabled:opacity-50 disabled:pointer-events-none"
-         >
-           <CheckCircle2 size={18} /> Verificar con IA
-         </button>
+         <div className="flex gap-3">
+           <button 
+             onClick={handleExportSuccessLogs} 
+             disabled={isExporting || logs.length === 0}
+             className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg shadow-inner transition-all disabled:opacity-50 disabled:pointer-events-none text-sm"
+           >
+             <Download size={16} /> {isExporting ? "Analizando..." : "Exportar Código Limpio"}
+           </button>
+           <button 
+             onClick={handleVerify} 
+             disabled={isLoadingAi}
+             className="flex items-center gap-2 px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all disabled:opacity-50 disabled:pointer-events-none"
+           >
+             <CheckCircle2 size={18} /> Verificar con IA
+           </button>
+         </div>
       </div>
 
       {/* Visual Logs Pane */}

@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSystemState, updateSystemState } from '@/lib/db';
-import { exec } from 'child_process'; // Usé esta librería nativa de Node para poder correr comandos directo en mi CMD de Windows
+import { exec } from 'child_process'; 
 import util from 'util';
 
-// Promisifico la ejecución para poder usar async/await y decirle a Node "espera a que MongoDB termine de procesar el comando"
 const execPromise = util.promisify(exec);
 
 export async function POST(req: Request) {
@@ -37,11 +36,23 @@ export async function POST(req: Request) {
       const activeDb = systemState.activeDb || "test";
       const connectionString = `mongodb://127.0.0.1:27017/${activeDb}`;
       
-      const formattedCommand = cmdStr;
+      // Limpieza brutal: 
+      // 1. Eliminamos comentarios de doble diagonal para que al aplanar la línea no comente el resto del código
+      let safeCmdStr = cmdStr.replace(/\/\/.*$/gm, '');
+      // 2. Aplastamos todos los saltos de línea a espacios para engañar a CMD
+      safeCmdStr = safeCmdStr.replace(/\r?\n/g, ' ');
+      // 3. Escapamos comillas dobles para que el comando eval de Windows no crashee
+      safeCmdStr = safeCmdStr.replace(/"/g, '\\"');
       
-      // La jugada maestra: Abro mongosh, le paso el código JS por la bandera --eval,
-      // la shell lo ejecuta internamente en su motor V8, me escupe texto plano y se cierra sin abrir la interfaz de consola.
-      const { stdout, stderr } = await execPromise(`mongosh "${connectionString}" --quiet --eval "${formattedCommand.replace(/"/g, '\\"')}"`);
+      let stdout = "";
+      let stderr = "";
+      try {
+        const result = await execPromise(`mongosh "${connectionString}" --quiet --eval "${safeCmdStr}"`);
+        stdout = result.stdout;
+        stderr = result.stderr;
+      } catch(e: any) {
+        stderr = e.message || "Error al ejecutar el script";
+      }
       
       output = stdout || stderr;
       
