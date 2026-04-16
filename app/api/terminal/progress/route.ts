@@ -12,9 +12,10 @@ export async function POST(req: Request) {
 
     const updated = await updateSystemState({ moduleIndex, lessonIndex });
     return NextResponse.json({ success: true, state: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error guardando progreso:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -26,7 +27,8 @@ export async function GET() {
       moduleIndex: state.moduleIndex ?? 0,
       lessonIndex: state.lessonIndex ?? 0,
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

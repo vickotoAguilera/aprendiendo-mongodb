@@ -18,11 +18,10 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
   // 'history' guarda los comandos y salidas que se ven en la pantalla principal (la consola grande azul)
   const [history, setHistory] = useState<TerminalEntry[]>([]);
   
-  // 'logs' guarda PERSISTENTEMENTE los comandos ejecutados en el servidor real. ¡Esto es lo que lee la IA!
   const [logs, setLogs] = useState<TerminalEntry[]>([]);
-  
-  // 'input' controla el texto que el usuario va escribiendo en la barra de comandos
   const [input, setInput] = useState('');
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   
   // Referencias para hacer auto-scroll hacia abajo cuando la consola se llena de texto
   const endRef = useRef<HTMLDivElement>(null);
@@ -34,7 +33,9 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
     if (!input.trim() || isLoadingAi) return;
 
     const currentCmd = input.trim();
-    setInput(''); // Limpia la barra de texto instantaneamente
+    setInput('');
+    setCommandHistory(prev => [...prev, currentCmd]);
+    setHistoryIndex(-1);
 
     // Sistema de limpieza basico: Si el usuario escribe cls o clear, vaciamos la 'historia' visual
     if (currentCmd.toLowerCase() === 'cls' || currentCmd.toLowerCase() === 'clear') {
@@ -73,7 +74,7 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
         return newLogs;
       });
 
-    } catch (err) {
+    } catch {
       // Manejo estricto si el servidor apago el mongosh o no hay red
       const errOut = "Error de Red: No se pudo conectar a la base de datos local.";
       setHistory(prev => { const n = [...prev]; n[n.length - 1] = { command: currentCmd, output: errOut }; return n; });
@@ -111,10 +112,30 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
     };
   }, []);
 
-  // Esta funcion serializa (convierte a texto plano gigante) todos tus logs para mandarlos al Bot Evaluador de Groq
   const handleVerify = () => {
      const logString = logs.map(l => `> ${l.command}\n${l.output}`).join('\n\n');
      onVerify(logString); // Enviamos los logs a la pagina padre page.tsx
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (commandHistory.length > 0) {
+        const nextIndex = historyIndex < commandHistory.length - 1 ? historyIndex + 1 : historyIndex;
+        setHistoryIndex(nextIndex);
+        setInput(commandHistory[commandHistory.length - 1 - nextIndex]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        const nextIndex = historyIndex - 1;
+        setHistoryIndex(nextIndex);
+        setInput(commandHistory[commandHistory.length - 1 - nextIndex]);
+      } else if (historyIndex === 0) {
+        setHistoryIndex(-1);
+        setInput('');
+      }
+    }
   };
 
   return (
@@ -152,6 +173,7 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
             type="text" 
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             disabled={isLoadingAi}
             className="w-full bg-transparent border-none outline-none text-indigo-50 font-bold pl-8 pr-12 text-lg placeholder:text-indigo-900/50 disabled:opacity-50"
             placeholder={isLoadingAi ? "Esperando a la IA..." : "Escribe un comando..."}
@@ -182,7 +204,7 @@ export function Terminal({ onVerify, isLoadingAi }: TerminalProps) {
       {/* Visual Logs Pane */}
       <div className="flex-1 bg-black/60 rounded-xl border border-gray-800 p-4 font-mono text-xs overflow-y-auto max-h-[150px] custom-scrollbar shadow-inner text-gray-500">
          {logs.length === 0 ? (
-            <span className="opacity-50">Los logs del sistema de la vida real de tu base de datos aparecerán aquí. Estos persisten después de un 'cls'.</span>
+            <span className="opacity-50">Los logs del sistema de la vida real de tu base de datos aparecerán aquí. Estos persisten después de un &apos;cls&apos;.</span>
          ) : (
             logs.map((l, i) => (
               <div key={i} className="mb-2 border-b border-gray-900 pb-2">

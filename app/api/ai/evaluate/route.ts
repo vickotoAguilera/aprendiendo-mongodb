@@ -86,7 +86,7 @@ Responde obligatoriamente en JSON con isSuccess, message y advance.
     let evaluatedJSON;
     try {
       evaluatedJSON = JSON.parse(aiResponse);
-    } catch (parseError) {
+    } catch {
       console.error("Error parseando respuesta IA:", aiResponse);
       // Si el JSON viene malformado, intentamos extraer un mensaje útil
       return NextResponse.json({
@@ -113,8 +113,9 @@ Responde obligatoriamente en JSON con isSuccess, message y advance.
       message: evaluatedJSON.message || (evaluatedJSON.isSuccess ? "¡Objetivo cumplido!" : "Revisa tu comando e intenta de nuevo.")
     });
 
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Groq API Error:", err);
-    return NextResponse.json({ error: "No pude conectar con el cerebro de IA para validar. Error: " + err.message }, { status: 500 });
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: "No pude conectar con el cerebro de IA para validar. Error: " + errorMessage }, { status: 500 });
   }
 }

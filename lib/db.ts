@@ -67,7 +67,7 @@ export async function getCollection(dbName: string, collection: string) {
 }
 
 // Save a collection's documents
-export async function saveCollection(dbName: string, collection: string, documents: any[]) {
+export async function saveCollection(dbName: string, collection: string, documents: unknown[]) {
   await initDb();
   const dbPath = path.join(DB_ROOT, dbName);
   await fs.mkdir(dbPath, { recursive: true }); // Ensure DB directory exists

@@ -40,7 +40,7 @@ export async function GET() {
     let evaluatedJSON;
     try {
       evaluatedJSON = JSON.parse(aiResponse);
-    } catch (parseError) {
+    } catch {
       console.error("Error parseando caso generado:", aiResponse);
       return NextResponse.json({ 
         error: "La IA generó una respuesta malformada. Intenta generar otro caso." 
@@ -56,8 +56,9 @@ export async function GET() {
 
     return NextResponse.json(evaluatedJSON);
 
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Groq API Error in case generation:", err);
-    return NextResponse.json({ error: "Error contactando al CEO IA: " + err.message }, { status: 500 });
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: "Error contactando al CEO IA: " + errorMessage }, { status: 500 });
   }
 }

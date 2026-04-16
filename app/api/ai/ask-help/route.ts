@@ -15,17 +15,18 @@ REGLAS DE RESPUESTA:
 
 export async function POST(req: Request) {
   try {
-    const { question } = await req.json();
+    const { question, messages } = await req.json();
 
-    if (!question) {
+    if (!question && (!messages || messages.length === 0)) {
        return NextResponse.json({ error: "No question provided" }, { status: 400 });
     }
 
+    const chatContext = messages && messages.length > 0
+      ? [{ role: 'system', content: SYSTEM_PROMPT }, ...messages]
+      : [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: question }];
+
     const completion = await groq.chat.completions.create({
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: question }
-      ],
+      messages: chatContext as any,
       model: 'llama-3.3-70b-versatile',
       temperature: 0.5,
     });
@@ -33,8 +34,9 @@ export async function POST(req: Request) {
     const aiResponse = completion.choices[0]?.message?.content || "El tutor no pudo responder.";
     return NextResponse.json({ message: aiResponse });
 
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Groq API Error in generic help:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

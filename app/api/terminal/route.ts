@@ -48,10 +48,11 @@ export async function POST(req: Request) {
       // Limpio los saltos de línea basura que a veces deja la terminal
       output = output.trim();
       
-    } catch (e: any) {
+    } catch (e: unknown) {
       // Si el usuario metió un error de sintaxis nativo (ej: db.err()), la consola de Windows explota,
       // así que lo atrapo aquí y se lo devuelvo como texto para que la IA lo vea y lo regañe.
-      output = `Error ejecutando comando localmente:\n${e.stdout || e.message}`;
+      const execError = e as { stdout?: string; message?: string };
+      output = `Error ejecutando comando localmente:\n${execError.stdout || execError.message || String(e)}`;
     }
 
     // Devuelvo todo al frontend para que Terminal.tsx lo dibuje en pantalla
@@ -60,8 +61,9 @@ export async function POST(req: Request) {
         systemState: await getSystemState(),
     });
 
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
